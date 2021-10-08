@@ -30,6 +30,11 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Step 5: Run the App
+```
+python main.py
+```
+
 ## To update requirements after adding new packages
 ```
 pip freeze > requirements.txt 
