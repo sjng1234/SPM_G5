@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+import pymysql
 
 from .models import Todo
 from .extensions import db
