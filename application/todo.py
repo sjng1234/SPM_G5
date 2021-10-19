@@ -14,9 +14,7 @@ def todo_index():
 def insert():
     if request.content_type == 'application/json':
         post_data = request.get_json()
-        title = post_data.get('title')
-        desc = post_data.get('todo_description')
-        new_to_do = Todo(title,desc)
+        new_to_do = Todo(**post_data)
         db.session.add(new_to_do)
         db.session.commit()
         return jsonify("Successfully posted!")

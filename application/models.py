@@ -13,11 +13,13 @@ class Todo(db.Model):
         'polymorphic_identity': 'todoitem'
     }
 
-    def __init__(self, title, todo_description):
-        self.title = title
-        self.todo_description = todo_description
-
     def __repr__(self):
         return f"{self.id}"
 
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
 
