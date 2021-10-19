@@ -5,13 +5,13 @@ from .extensions import db, cors
 import pymysql
 
 def create_app(config_file="settings.py"):
-    application = Flask(__name__)
+    app = Flask(__name__)
 
-    application.config.from_pyfile(config_file)
+    app.config.from_pyfile(config_file)
 
-    db.init_app(application)
+    db.init_app(app)
 
-    cors.init_app(application)
+    cors.init_app(app)
 
     main = Blueprint('main',__name__)
 
@@ -19,9 +19,9 @@ def create_app(config_file="settings.py"):
     def sanity_check():
         return "Blueprint End point"
 
-    application.register_blueprint(main)
-    application.register_blueprint(todo)
+    app.register_blueprint(main)
+    app.register_blueprint(todo)
 
-    return application
+    return app
 
-application = create_app()
+app = create_app()
