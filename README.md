@@ -30,9 +30,14 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Step 5: Run the App
+## Step 5a: Run the App
 ```
-python main.py
+python application.py
+```
+
+## Step 5b: Run the UnitTest
+```
+python unittest/unittests.py
 ```
 
 ## To update requirements after adding new packages
