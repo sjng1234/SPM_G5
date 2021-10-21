@@ -1,4 +1,4 @@
-# import unittest
+import unittest
 import sys
 sys.path.insert(0, '.')
 from application.models import Todo
