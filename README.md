@@ -1,4 +1,4 @@
-# SPM LMS Backend  
+# SPM LMS Backend
 
 ## Project Setup
 
