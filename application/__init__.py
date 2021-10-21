@@ -1,8 +1,10 @@
 from flask import Flask, Blueprint
 
 from .todo import todo
+from .course import course
 from .extensions import db, cors
 import pymysql
+pymysql.install_as_MySQLdb()
 
 def create_app(config_file="settings.py"):
     app = Flask(__name__)
@@ -21,6 +23,7 @@ def create_app(config_file="settings.py"):
 
     app.register_blueprint(main)
     app.register_blueprint(todo)
+    app.register_blueprint(course)
 
     return app
 
