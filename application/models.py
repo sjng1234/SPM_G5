@@ -36,15 +36,8 @@ class Course(db.Model):
     def __repr__(self):
         return f"{self.course_id}"
 
-    def retrieve_course(self, course_id):
-        col = self.__mapper__column_attrs.keys()
-        for i in col:
-            if i == course_id:
-                return getattr(self, i)
-        return "Course not found"
-
     def to_dict(self):
-        col = self.__mapper__column_attrs.keys()
+        col = self.__mapper__.column_attrs.keys()
         result = {}
         for i in col:
             result[i] = getattr(self, i)
