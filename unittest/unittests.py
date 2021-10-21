@@ -1,7 +1,8 @@
 import unittest
 import sys
-sys.path.insert(0, '.')
+sys.path.insert(0, '..')
 from application.models import Todo
+from application.models import Course
 
 class TestToDoList(unittest.TestCase):
     """This test case class test the sample Class we have for the Todos class"""
@@ -14,7 +15,24 @@ class TestToDoList(unittest.TestCase):
             'title': 'Hello',
             'todo_description': 'Success!'}
         )
-  
+class TestCourseList(unittest.TestCase):
+
+    def test_to_dict(self):
+        course = Course(course_id="IS111")
+
+        self.assertEqual(course.to_dict(), {
+            "course_id": "IS111",
+            "title": None,
+            "course_description": None}
+        )
+    
+    def test_retrieve_course_info(self):
+        course = Course()
+        self.assertEqual(course.retrieve_course("IS111"),{
+            "course_id": "IS111",
+            "title": "Introduction to Programming",
+            "course_description": "Basics to Python"         
+        })
   
 # Run only if we run python directly from this file, not when importing
 if __name__ == "__main__":
