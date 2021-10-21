@@ -1,5 +1,5 @@
 # SPM LMS Backend  
- 
+
 ## Project Setup
  
 ## Step 1: If virtualenv is not installed as a package (1st Time)
