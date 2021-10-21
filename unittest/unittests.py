@@ -25,14 +25,7 @@ class TestCourseList(unittest.TestCase):
             "title": None,
             "course_description": None}
         )
-    
-    def test_retrieve_course_info(self):
-        course = Course()
-        self.assertEqual(course.retrieve_course("IS111"),{
-            "course_id": "IS111",
-            "title": "Introduction to Programming",
-            "course_description": "Basics to Python"         
-        })
+
   
 # Run only if we run python directly from this file, not when importing
 if __name__ == "__main__":
