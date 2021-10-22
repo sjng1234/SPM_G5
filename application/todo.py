@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-import pymysql
+# import pymysql
 
 from .models import Todo
 from .extensions import db
@@ -22,15 +22,17 @@ def insert():
 
 @todo.route('/getAll',methods = ['GET'])
 def return_Todos():
-    all_books = db.session.query(Todo.id,Todo.title,Todo.todo_description).all()
-    data = [dict(i) for i in all_books]
+    # db.create_all()
+    all_books = Todo.query.all()
+    data = [i.to_dict() for i in all_books]
     return jsonify(data)
 
 @todo.route('/get/<id>',methods = ['GET'])
 def return_Todo_Item(id):
+    # db.create_all()
     try:
-        book = db.session.query(Todo.id,Todo.title,Todo.todo_description).filter(Todo.id == id).first()
-        return jsonify(dict(book))
+        book = Todo.query.get(id)
+        return jsonify(book.to_dict())
     except Exception:
         return jsonify({
             "message": "ToDo ID not found in database."
@@ -39,7 +41,7 @@ def return_Todo_Item(id):
 @todo.route('/delete/<id>', methods=['DELETE'])
 def delete_Todo_Item(id):
     try:
-        record = db.session.query(Todo).get(id)
+        record = Todo.query.get(id)
         db.session.delete(record)
         db.session.commit()
         return jsonify('Deleted')
@@ -51,14 +53,17 @@ def delete_Todo_Item(id):
 @todo.route('/update/<id>',methods=['PUT'])
 def update_item(id):
     try:
-        record = db.session.query(Todo).get(id)
+        record = Todo.query.get(id)
+        print(record)
         if request.content_type == 'application/json':
             put_data = request.get_json()
+            print(put_data)
             title = put_data.get('title')
             desc = put_data.get('todo_description')
+            print(title, desc)
             if 'id' in put_data:
                 print(1)
-                record.id = put_data.get('id')
+                record.id = id
             record.title = title
             record.todo_description = desc
             db.session.commit()

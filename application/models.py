@@ -24,10 +24,12 @@ class Todo(db.Model):
         return result
 
 class Course(db.Model):
-    __tablename__ = "COURSES"
+    __tablename__ = "course"
     course_id = Column(db.String(20), primary_key=True)
-    title = Column(db.String(20))
+    course_name = Column(db.String(20))
     course_description = Column(db.String(100))
+    course_creator_id = Column(db.String(255))
+    date_created =  Column(db.DateTime)
     
     __mapper_args__ = {
         'polymorphic_identity': 'courseitem'

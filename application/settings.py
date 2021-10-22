@@ -1,11 +1,12 @@
 import os 
 from flask_sqlalchemy import sqlalchemy
+# import pymysql
 
 SQLALCHEMY_ENGINE_OPTIONS = {'pool_size': 100, 'pool_recycle': 280}
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # For Localhost Testing
-# SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3306/SPM_LMS"
+# SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3306/SPM"
 
 # To Test on Cloud SQL
 CLOUD_DB_USERNAME = os.environ.get('CLOUD_DB_USERNAME')
