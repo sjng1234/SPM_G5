@@ -22,8 +22,10 @@ class TestCourseList(unittest.TestCase):
 
         self.assertEqual(course.to_dict(), {
             "course_id": "IS111",
-            "title": None,
-            "course_description": None}
+            "course_name": None,
+            "course_description": None,
+            "course_creator_id": None,
+            "date_created": None}
         )
 
   

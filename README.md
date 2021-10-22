@@ -37,7 +37,7 @@ python application.py
 
 ## Step 5b: Run the UnitTest
 ```
-python unittest/unittests.py
+python unit_test.py
 ```
 
 ## To update requirements after adding new packages
