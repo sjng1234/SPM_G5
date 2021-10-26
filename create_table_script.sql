@@ -1,5 +1,5 @@
 DROP SCHEMA IF EXISTS SPM;
-CREATE SCHEMA SPM;
+CREATE SCHEMA SPM CHARACTER SET utf8;
 USE SPM;
 SHOW TABLES;
 
@@ -9,7 +9,7 @@ title varchar(20),
 todo_description varchar(100));
 
 CREATE TABLE IF NOT EXISTS `course` (
-  `course_id` varchar(255) PRIMARY KEY,
+  `course_id` varchar(50) PRIMARY KEY,
   `course_name` varchar(255),
   `course_description` varchar(255),
   `course_creator_id` varchar(255),
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `course` (
 );
 
 CREATE TABLE IF NOT EXISTS `class` (
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int AUTO_INCREMENT,
   `class_creator_id` varchar(255),
   `start_datetime` datetime,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `class` (
 );
 
 CREATE TABLE IF NOT EXISTS `chapter` (
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `chapter_id` int AUTO_INCREMENT,
   `chapter_name` varchar(255),
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `chapter` (
 );
 
 CREATE TABLE IF NOT EXISTS `material` (
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `chapter_id` int,
   `material_id` int AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `material` (
 
 CREATE TABLE IF NOT EXISTS `material_completion_status` (
   `user_id` int,
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `chapter_id` int,
   `material_id` int,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `material_completion_status` (
 );
 
 CREATE TABLE IF NOT EXISTS `quiz` (
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `quiz_id` int,
   `duration` int,
@@ -68,14 +68,15 @@ CREATE TABLE IF NOT EXISTS `quiz` (
 );
 
 CREATE TABLE IF NOT EXISTS `quiz_questions` (
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `quiz_id` int,
-  `question_id` varchar(255),
-  `answer_course_id` varchar(255),
+  `question_id` int,
+  `question_description` varchar(255),
+  `answer_course_id` varchar(50),
   `answer_class_id` int,
   `answer_quiz_id` int,
-  `answer_question_id` varchar(255),
+  `answer_question_id` int,
   `answer_option` varchar(255),
   
   
@@ -83,10 +84,10 @@ CREATE TABLE IF NOT EXISTS `quiz_questions` (
 );
 
 CREATE TABLE IF NOT EXISTS `quiz_questions_options` (
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `quiz_id` int,
-  `question_id` varchar(255),
+  `question_id` int,
   `option` varchar(255),
   UNIQUE(`course_id`),
   UNIQUE(`class_id`),
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `quiz_questions_options` (
 
 CREATE TABLE IF NOT EXISTS `quiz_results` (
   `user_id` int,
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `class_id` int,
   `quiz_id` int,
   `score` int,
@@ -117,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 CREATE TABLE IF NOT EXISTS `qualifications` (
   `user_id` int,
-  `course_id` varchar(255),
+  `course_id` varchar(50),
   `is_qualified` boolean,
   PRIMARY KEY (`user_id`, `course_id`)
 );
