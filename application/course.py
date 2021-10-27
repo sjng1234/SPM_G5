@@ -19,18 +19,16 @@ def insert():
             db.session.add(new_course)
             db.session.commit()
             return jsonify("Successfully posted!")
-        return jsonify("Oops something went wrong!")
+        return jsonify("Oops something went wrong with the JSON script!")
     except Exception:
         return jsonify({
-            "Error Message": "An error occured in adding, please try again"
+            "Error Message": "An error occurred in adding, please try again"
         }), 404
 
 # Read
 @course.route('/getAll',methods = ['GET'])
 def return_course():
     all_books = Course.query.all()
-    print(all_books)
-    print(type(all_books[0]))
     data = [i.to_dict() for i in all_books]
     return jsonify(data)
 
@@ -51,20 +49,19 @@ def update_course_detail(id):
         record = Course.query.get(id)
         if request.content_type == 'application/json':
             put_data = request.get_json()
-            course_name = put_data.get('course_name')
-            course_description = put_data.get('course_description')
-            course_creator_id = put_data.get('course_creator_id')
-            date_created = put_data.get('date_created')
+            name = put_data.get('course_name')
+            description = put_data.get('course_description')
+            creator_id = put_data.get('course_creator_id')
+            created = put_data.get('date_created')
             if 'id' in put_data:
                 record.id = put_data.get('id')
-            record.course_name = course_name
-            record.course_description = course_description
-            record.course_creator_id = course_creator_id
-            record.date_created = date_created
+            setattr(record, "course_name", name)
+            setattr(record, "course_description", description)
+            setattr(record, "course_creator_id", creator_id)
+            setattr(record, "date_created", created)
             db.session.commit()
             return jsonify('Updated!')
-        else:
-            raise Exception
+        return jsonify("Something is wrong with the JSON script!")
     except Exception:
         return jsonify({
             "message": "Enter Valid JSON request body or a valid id for database"
