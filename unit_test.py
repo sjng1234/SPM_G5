@@ -33,7 +33,8 @@ class TestClassList(unittest.TestCase):
 
     def test_to_dict(self):
         class1 = Class(course_id="IS111", class_id=1, class_creator_id="Lee Yeow Leong")
-        class2 = Class(course_id="IS110", class_id=1, class_creator_id="Patrick Thng", start_datetime="10/9/2021", class_size=40)
+        class2 = Class(course_id="IS110", class_id=1, class_creator_id="Patrick Thng", 
+                start_datetime="10/9/2021", class_size=40)
 
         self.assertEqual(class1.to_dict(), {
             "course_id": "IS111",
@@ -42,7 +43,7 @@ class TestClassList(unittest.TestCase):
             "start_datetime": None,
             "end_datetime": None,
             "class_size": None,
-            "trainer_id": None
+            "trainer_id": None,
         })
 
         self.assertEqual(class2.to_dict(), {
@@ -52,8 +53,10 @@ class TestClassList(unittest.TestCase):
             "start_datetime": "10/9/2021",
             "end_datetime": None,
             "class_size": 40,
-            "trainer_id": None
+            "trainer_id": None,
         })
+
+
   
 # Run only if we run python directly from this file, not when importing
 if __name__ == "__main__":
