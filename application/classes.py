@@ -32,10 +32,19 @@ def getAll():
     data = [i.to_dict() for i in all_books]
     return jsonify(data)
 
-@classes.route("/updateClass/<course_id>/<class_id>", methods=["GET"])
-def update_class_detail(course_id, class_id):
+@classes.route("/getClass/<course_id>/<class_id>", methods=["GET"])
+def get_class_detail(course_id, class_id):
     try:
-        record = Class.query.get((course_id, class_id))
-        return jsonify(record)
+        record = Class.query.filter(Class.class_id == class_id, Class.course_id == course_id).first()
+        return jsonify(record.to_dict())
+    except:
+        return "Error"
+
+@classes.route("/getClasses/<course_id>", methods=["GET"])
+def get_all_classes(course_id):
+    try:
+        records = Class.query.filter(Class.course_id == course_id).all()
+        data = [i.to_dict() for i in records]
+        return jsonify(data)
     except:
         return "Error"
