@@ -9,16 +9,15 @@ title varchar(20),
 todo_description varchar(100));
 
 CREATE TABLE IF NOT EXISTS `course` (
-  `course_id` varchar(50),
+  `course_id` varchar(50) PRIMARY KEY,
   `course_name` varchar(255),
   `course_description` varchar(255),
   `course_creator_id` varchar(255),
   `date_created` datetime,
-  UNIQUE(`course_id`),
-  PRIMARY KEY (`course_id`)
+  UNIQUE(course_id)
 );
 
-CREATE TABLE IF NOT EXISTS `classes` (
+CREATE TABLE IF NOT EXISTS `class` (
   `course_id` varchar(50),
   `class_id` int AUTO_INCREMENT,
   `class_creator_id` varchar(255),
@@ -26,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `end_datetime` datetime,
   `class_size` int,
   `trainer_id` int,
-  UNIQUE(`class_id`, `course_id`),
+  UNIQUE(class_id),
   PRIMARY KEY (`class_id`, `course_id`)
 );
 
@@ -35,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `chapter` (
   `class_id` int,
   `chapter_id` int AUTO_INCREMENT,
   `chapter_name` varchar(255),
-  UNIQUE(`chapter_id`),
+  UNIQUE(chapter_id),
   PRIMARY KEY (`chapter_id`, `class_id`, `course_id`)
 );
 
@@ -45,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `material` (
   `chapter_id` int,
   `material_id` int AUTO_INCREMENT,
   `material_reference` varchar(255),
-  UNIQUE(`material_id`),
+  UNIQUE(material_id),
   PRIMARY KEY (`material_id`, `chapter_id`, `class_id`, `course_id`)
 );
 
@@ -64,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   `class_id` int,
   `quiz_id` int,
   `duration` int,
-  UNIQUE(`quiz_id`),
+  UNIQUE(quiz_id),
   PRIMARY KEY (`course_id`, `class_id`, `quiz_id`)
 );
 
@@ -124,11 +123,11 @@ CREATE TABLE IF NOT EXISTS `qualifications` (
   PRIMARY KEY (`user_id`, `course_id`)
 );
 
-ALTER TABLE `classes` ADD FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`);
+ALTER TABLE `class` ADD FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`);
 
-ALTER TABLE `chapter` ADD FOREIGN KEY (`course_id`) REFERENCES `classes` (`course_id`);
+ALTER TABLE `chapter` ADD FOREIGN KEY (`course_id`) REFERENCES `class` (`course_id`);
 
-ALTER TABLE `chapter` ADD FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`);
+ALTER TABLE `chapter` ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`);
 
 ALTER TABLE `material` ADD FOREIGN KEY (`course_id`) REFERENCES `chapter` (`course_id`);
 
@@ -146,9 +145,9 @@ ALTER TABLE `material_completion_status` ADD FOREIGN KEY (`chapter_id`) REFERENC
 
 ALTER TABLE `material_completion_status` ADD FOREIGN KEY (`material_id`) REFERENCES `material` (`material_id`);
 
-ALTER TABLE `quiz` ADD FOREIGN KEY (`course_id`) REFERENCES `classes` (`course_id`);
+ALTER TABLE `quiz` ADD FOREIGN KEY (`course_id`) REFERENCES `class` (`course_id`);
 
-ALTER TABLE `quiz` ADD FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`);
+ALTER TABLE `quiz` ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`);
 
 ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`course_id`) REFERENCES `quiz` (`course_id`);
 

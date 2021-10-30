@@ -1,7 +1,7 @@
 from re import L
 from flask import Blueprint, request, jsonify
 
-from .models import Classes
+from .models import Class
 from .extensions import db
 
 classes = Blueprint('class', __name__, url_prefix="/classes")
@@ -16,7 +16,7 @@ def insert():
     try:
         if request.content_type == "application/json":
             post_data = request.get_json()
-            new_class = Classes(**post_data)
+            new_class = Class(**post_data)
             db.session.add(new_class)
             db.session.commit()
             return jsonify("Successfully created a new class!")
@@ -29,19 +29,15 @@ def insert():
 # Get All
 @classes.route("/getAll", methods=["GET"])
 def getAll():
-    all_books = Classes.query.all()
-    count = Classes.query.count()
-
-    return jsonify({
-        "count": count,
-        "data" : [i.to_dict() for i in all_books]
-        })
+    all_books = Class.query.all()
+    data = [i.to_dict() for i in all_books]
+    return jsonify(data)
 
 # Get One
 @classes.route("/getOne/<courid>/<classid>", methods=["GET"])
 def get_classes_from_course(courid, classid):
     try:
-        record = Classes.query.filter_by(course_id = courid, class_id = classid)
+        record = Class.query.filter_by(course_id = courid, class_id = classid)
         result = [i.to_dict() for i in record]
         return jsonify(result)
     except:
@@ -53,7 +49,7 @@ def get_classes_from_course(courid, classid):
 @classes.route("/getCourseClasses/<course_id>", methods=["GET"])
 def get_all_classes(course_id):
     try:
-        records = Classes.query.filter(Classes.course_id == course_id)
+        records = Class.query.filter(Class.course_id == course_id).all()
         data = [i.to_dict() for i in records]
         return jsonify(data)
     except:
@@ -65,7 +61,7 @@ def get_all_classes(course_id):
 @classes.route("/updateClass/<courid>/<classid>", methods=["PUT"])
 def update_class_detail(courid, classid):
     try:
-        record = Classes.query.filter_by(course_id = courid, class_id = classid).first()
+        record = Class.query.filter_by(course_id = courid, class_id = classid).first()
         if request.content_type == "application/json":
             put_data = request.get_json()
             creator_id = put_data.get("class_creator_id")
@@ -87,16 +83,3 @@ def update_class_detail(courid, classid):
         return jsonify({
             "message": "Enter Valid JSON request body or a valid id for database"
         }),404
-
-# DELETE
-@classes.route("/delete/<courid>/<cid>", methods = ["DELETE"])
-def delete_chapter(courid, cid):
-    try:
-        record = Classes.query.filter_by(course_id = courid, class_id = cid).first()
-        db.session.delete(record)
-        db.session.commit()
-        return jsonify("Class deleted from Course!")
-    except Exception:
-        return jsonify({
-            "Message": "Class not found in Course, delete not successful."
-        }), 404
