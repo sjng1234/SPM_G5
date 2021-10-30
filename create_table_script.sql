@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `end_datetime` datetime,
   `class_size` int,
   `trainer_id` int,
-  UNIQUE(`class_id`, `course_id`),
   PRIMARY KEY (`class_id`, `course_id`)
 );
 
@@ -35,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `chapter` (
   `class_id` int,
   `chapter_id` int AUTO_INCREMENT,
   `chapter_name` varchar(255),
-  UNIQUE(`chapter_id`),
   PRIMARY KEY (`chapter_id`, `class_id`, `course_id`)
 );
 
@@ -45,7 +43,6 @@ CREATE TABLE IF NOT EXISTS `material` (
   `chapter_id` int,
   `material_id` int AUTO_INCREMENT,
   `material_reference` varchar(255),
-  UNIQUE(`material_id`),
   PRIMARY KEY (`material_id`, `chapter_id`, `class_id`, `course_id`)
 );
 
@@ -64,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   `class_id` int,
   `quiz_id` int,
   `duration` int,
-  UNIQUE(`quiz_id`),
   PRIMARY KEY (`course_id`, `class_id`, `quiz_id`)
 );
 
@@ -90,11 +86,6 @@ CREATE TABLE IF NOT EXISTS `quiz_questions_options` (
   `quiz_id` int,
   `question_id` int,
   `option` varchar(255),
-  UNIQUE(`course_id`),
-  UNIQUE(`class_id`),
-  UNIQUE(`quiz_id`),
-  UNIQUE(`question_id`),
-  UNIQUE(`option`),
   PRIMARY KEY (`option`, `question_id`, `quiz_id`, `class_id`, `course_id`)
 );
 

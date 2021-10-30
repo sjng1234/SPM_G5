@@ -5,8 +5,8 @@ from .course import course
 from .classes import classes
 from .chapter import chapter
 from .extensions import db, cors
-# import pymysql
-# pymysql.install_as_MySQLdb()
+import pymysql
+pymysql.install_as_MySQLdb()
 
 def create_app(config_file="settings.py"):
     app = Flask(__name__)

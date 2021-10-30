@@ -50,7 +50,7 @@ class Course(db.Model):
         return getattr(self, "course_name")
 
 # Classes
-class Classes(Course):
+class Classes(db.Model):
     __tablename__ = "classes"
     course_id = Column(db.String(50), db.ForeignKey("course.course_id"), primary_key = True)
     class_id = Column(db.Integer, primary_key=True)
@@ -68,7 +68,7 @@ class Classes(Course):
         return result
 
 # Chapter
-class Chapter(Classes):
+class Chapter(db.Model):
     __tablename__ = "chapter"
     course_id = Column(db.String(50), primary_key=True)
     class_id = Column(db.Integer, primary_key=True)
