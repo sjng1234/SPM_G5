@@ -23,7 +23,7 @@ class Todo(db.Model):
             result[i] = getattr(self, i)
         return result
 
-#Course
+# Course
 class Course(db.Model):
     __tablename__ = "course"
     course_id = Column(db.String(50), primary_key=True)
@@ -46,23 +46,19 @@ class Course(db.Model):
             result[i] = getattr(self, i)
         return result
 
-#Class
-class Class(Course):
-    __tablename__ = "class"
+    def get_course_name(self):
+        return getattr(self, "course_name")
+
+# Classes
+class Classes(Course):
+    __tablename__ = "classes"
+    course_id = Column(db.String(50), db.ForeignKey("course.course_id"), primary_key = True)
     class_id = Column(db.Integer, primary_key=True)
-    course_id = Column(db.String(50), primary_key=True)
     class_creator_id = Column(db.String(255))
     start_datetime = Column(db.DateTime)
     end_datetime = Column(db.DateTime)
     class_size = Column(db.Integer)
     trainer_id = Column(db.Integer)
-
-    __mapper_args__ = {'concrete':True}
-    __table_args__ = (ForeignKeyConstraint([course_id],
-                            [Course.course_id]), {})
-
-    def __repr__(self):
-        return f"{self.class_id}-{self.course_id}"
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
@@ -82,13 +78,8 @@ class Chapter(Classes):
     __table_args__ = (
         ForeignKeyConstraint(
             ["class_id", "course_id"],
-<<<<<<< HEAD
             ["classes.class_id", "classes.course_id"]
         ), {}
-=======
-            ["class.class_id", "class.course_id"]
-        ),
->>>>>>> parent of 2e1fa44 (Merge branch 'main' into staging)
     )
 
     def to_dict(self):
@@ -97,4 +88,3 @@ class Chapter(Classes):
         for i in col:
             result[i] = getattr(self, i)
         return result
-
