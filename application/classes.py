@@ -49,18 +49,6 @@ def get_classes_from_course(courid, classid):
             "Error Message": "Course is not found, thus there are no registered classes"
         }), 404
 
-# Get All Class of a specific course
-@classes.route("/getCourseClasses/<course_id>", methods=["GET"])
-def get_all_classes(course_id):
-    try:
-        records = Classes.query.filter(Classes.course_id == course_id)
-        data = [i.to_dict() for i in records]
-        return jsonify(data)
-    except:
-        return jsonify({
-            "Error Message": "Course is not found, thus there are no registered classes"
-        }), 404
-
 # UPDATE
 @classes.route("/updateClass/<courid>/<classid>", methods=["PUT"])
 def update_class_detail(courid, classid):

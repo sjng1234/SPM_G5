@@ -33,7 +33,8 @@ class TestClassList(unittest.TestCase):
         class1 = Classes(course_id="IS111", class_id=1, class_creator_id="Lee Yeow Leong")
         class2 = Classes(course_id="IS110", class_id=1, class_creator_id="Patrick Thng", 
                 start_datetime="10/9/2021", class_size=40)
-
+        
+        print(class1)
         self.assertEqual(class1.to_dict(), {
             "course_id": "IS111",
             "class_id": 1,

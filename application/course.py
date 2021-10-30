@@ -29,6 +29,7 @@ def insert():
 @course.route('/getAll',methods = ['GET'])
 def return_course():
     all_books = Course.query.all()
+    
     data = [i.to_dict() for i in all_books]
     return jsonify(data)
 
@@ -42,11 +43,27 @@ def return_get_course_detail(id):
         return jsonify({
             "Error Message": "Course with that ID doesn't exists!"
         }),404
+
+# Read (Get all classes of a course)   
+@course.route('/getCourse/<id>/getAllClasses',methods = ['GET'])
+def return_get_course_classes(id):
+    try:
+        print(id)
+        data = Course.query.get(id)
+        classes = data.classes.all() # Query All Classes for the Specific Course (Syntax: <queried_data>.<relationship>.all())
+        allClasses = [i.to_dict() for i in classes]
+        return jsonify(allClasses)
+    except Exception:
+        return jsonify({
+            "Error Message": "Course with that ID doesn't exists!"
+        }),404
+        
 # Update
 @course.route('/updateCourse/<id>',methods=['PUT'])
 def update_course_detail(id):
     try:
         record = Course.query.get(id)
+        
         if request.content_type == 'application/json':
             put_data = request.get_json()
             name = put_data.get('course_name')

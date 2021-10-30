@@ -1,5 +1,5 @@
 from .extensions import db
-from sqlalchemy.sql.schema import Column, ForeignKey, ForeignKeyConstraint, PrimaryKeyConstraint
+from sqlalchemy.sql.schema import Column, ForeignKeyConstraint
 
 # Model
 # example
@@ -31,6 +31,7 @@ class Course(db.Model):
     course_description = Column(db.String(255))
     course_creator_id = Column(db.String(255))
     date_created =  Column(db.DateTime)
+    classes = db.relationship('Classes', backref="course", lazy="dynamic") # Establish one-to-many relationship between course and classes
     
     __mapper_args__ = {
         'polymorphic_identity': 'course'
@@ -59,9 +60,15 @@ class Classes(db.Model):
     end_datetime = Column(db.DateTime)
     class_size = Column(db.Integer)
     trainer_id = Column(db.Integer)
+    chapters = db.relationship('Chapter', backref="class", lazy="dynamic") # Establish one-to-many relationship between classes and chapter
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'classes'
+    }
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
+        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
