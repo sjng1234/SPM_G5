@@ -6,6 +6,8 @@ from .classes import classes
 from .chapter import chapter
 from .quiz import quiz
 from .user import user
+from .quiz_questions import quiz_questions
+
 from .extensions import db, cors
 
 import pymysql
@@ -35,6 +37,8 @@ def create_app(config_file="settings.py"):
     app.register_blueprint(chapter)
     app.register_blueprint(quiz)
     app.register_blueprint(user)
+    app.register_blueprint(quiz_questions)
+
 
     return app
 
