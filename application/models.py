@@ -126,42 +126,6 @@ class Material(db.Model):
             result[i] = getattr(self, i)
         return result
 
-# Material Completion Status
-
-class Material_Completion_Status(db.Model):
-    __tablename__ = "material_completion_status"
-    user_id = Column(db.Integer, primary_key=True)
-    course_id = Column(db.String(50), primary_key=True)
-    class_id = Column(db.Integer, primary_key=True)
-    chapter_id = Column(db.Integer, primary_key=True)
-    material_id = Column(db.Integer, primary_key=True)
-    is_completed = Column(db.Boolean)
-    user = db.relationship("User", backref="material_completion_status")
-
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'material_completion_status'
-    }
-
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["course_id","class_id", "chapter_id", "material_id"],
-            ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id"]
-        ), 
-        ForeignKeyConstraint(
-            ["user_id"],
-            ["user.user_id"]
-        )
-    )
-
-    def to_dict(self):
-        col = self.__mapper__.column_attrs.keys()
-        print(col)
-        result = {}
-        for i in col:
-            result[i] = getattr(self, i)
-        return result
-
 # Quiz
 class Quiz(db.Model):
     __tablename__ = "quiz"

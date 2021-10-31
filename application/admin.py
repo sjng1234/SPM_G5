@@ -3,15 +3,15 @@ from flask import Blueprint, json, request, jsonify
 from .models import User, Learner, Admin, Trainer, Qualifications, Learner_Enrolment, Material_Completion_Status
 from .extensions import db
 
-user = Blueprint("user", __name__, url_prefix="/user")
+admin = Blueprint("user", __name__, url_prefix="/user")
 
 # user root
-@user.route("/", methods=["GET"])
+@admin.route("/", methods=["GET"])
 def test_root_user_route():
     return "user root route"
 
 # Create
-@user.route("/create", methods=["POST"])
+@admin.route("/create", methods=["POST"])
 def create_user():
     try:
         if request.content_type == "application/json":
@@ -34,7 +34,7 @@ def create_user():
         return jsonify({"message": str(e)}), 400
 
 # GETALL
-@user.route("/getAll", methods = ["GET"])
+@admin.route("/getAll", methods = ["GET"])
 def get_all():
     record = User.query.all()
     result = [i.to_dict() for i in record]
