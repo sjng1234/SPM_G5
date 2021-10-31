@@ -11,7 +11,7 @@ def class_index():
     return "View Classes"
 
 # Create
-@classes.route('/addClass', methods= ["POST"])
+@classes.route('/add', methods= ["POST"])
 def insert():
     try:
         if request.content_type == "application/json":
@@ -31,38 +31,13 @@ def insert():
 def getAll():
     all_books = Classes.query.all()
     count = Classes.query.count()
-
     return jsonify({
         "count": count,
         "data" : [i.to_dict() for i in all_books]
         })
 
-# Get One
-@classes.route("/getOne/<courid>/<classid>", methods=["GET"])
-def get_classes_from_course(courid, classid):
-    try:
-        record = Classes.query.filter_by(course_id = courid, class_id = classid)
-        result = [i.to_dict() for i in record]
-        return jsonify(result)
-    except:
-        return jsonify({
-            "Error Message": "Course is not found, thus there are no registered classes"
-        }), 404
-
-# Get All Class of a specific course
-@classes.route("/getCourseClasses/<course_id>", methods=["GET"])
-def get_all_classes(course_id):
-    try:
-        records = Classes.query.filter(Classes.course_id == course_id)
-        data = [i.to_dict() for i in records]
-        return jsonify(data)
-    except:
-        return jsonify({
-            "Error Message": "Course is not found, thus there are no registered classes"
-        }), 404
-
 # UPDATE
-@classes.route("/updateClass/<courid>/<classid>", methods=["PUT"])
+@classes.route("/update/<courid>/<classid>", methods=["PUT"])
 def update_class_detail(courid, classid):
     try:
         record = Classes.query.filter_by(course_id = courid, class_id = classid).first()

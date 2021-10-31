@@ -13,9 +13,6 @@ def view_chapter():
 @chapter.route("/getAll", methods = ["GET"])
 def get_all():
     record = Chapter.query.all()
-    print(record)
-    for i in record:
-        print(i.creator())
     result = [i.to_dict() for i in record]
     return jsonify(result)
 
@@ -47,6 +44,23 @@ def get_all_chapters(courid, cid):
             "Error Message": "Chapter is not found"
         })
 
+# UPDATE
+@chapter.route("/update/<courid>/<classid>/<chapid>", methods=["PUT"])
+def update_class_detail(courid, classid, chapid):
+    try:
+        record = Chapter.query.filter_by(course_id = courid, class_id = classid, chapter_id = chapid).first()
+        if request.content_type == "application/json":
+            put_data = request.get_json()
+            name = put_data.get("chapter_name")
+
+            setattr(record, "chapter_name", name)
+            db.session.commit()
+            return jsonify("Successful update of class content!")
+        return jsonify("Something is wrong with the JSON script!")
+    except Exception:
+        return jsonify({
+            "message": "Enter Valid JSON request body or a valid id for database"
+        }),404
 
 # DELETE
 @chapter.route("/delete/<courid>/<cid>/<chapid>", methods = ["DELETE"])

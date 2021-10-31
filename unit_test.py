@@ -33,7 +33,8 @@ class TestClassList(unittest.TestCase):
         class1 = Classes(course_id="IS111", class_id=1, class_creator_id="Lee Yeow Leong")
         class2 = Classes(course_id="IS110", class_id=1, class_creator_id="Patrick Thng", 
                 start_datetime="10/9/2021", class_size=40)
-
+        
+        print(class1)
         self.assertEqual(class1.to_dict(), {
             "course_id": "IS111",
             "class_id": 1,
@@ -41,11 +42,7 @@ class TestClassList(unittest.TestCase):
             "start_datetime": None,
             "end_datetime": None,
             "class_size": None,
-            "trainer_id": None,
-            "course_creator_id": None,
-            "course_description": None,
-            "course_name":None,
-            "date_created":None
+            "trainer_id": None
         })
 
         self.assertEqual(class2.to_dict(), {
@@ -55,11 +52,7 @@ class TestClassList(unittest.TestCase):
             "start_datetime": "10/9/2021",
             "end_datetime": None,
             "class_size": 40,
-            "trainer_id": None,
-            "course_creator_id": None,
-            "course_description": None,
-            "course_name":None,
-            "date_created":None
+            "trainer_id": None
         })
 
 class TestChapterList(unittest.TestCase):
@@ -71,32 +64,14 @@ class TestChapterList(unittest.TestCase):
             "course_id": "IS111",
             "class_id": 1,
             "chapter_id": 1,
-            "chapter_name": "String Methods",
-            "class_creator_id": None,
-            "start_datetime": None,
-            "end_datetime": None,
-            "class_size": None,
-            "trainer_id": None,
-            "course_creator_id": None,
-            "course_description": None,
-            "course_name":None,
-            "date_created":None
+            "chapter_name": "String Methods"
         })
 
         self.assertEqual(chapter2.to_dict(), {
             "course_id": "IS110",
             "class_id": 1,
             "chapter_id": 2,
-            "chapter_name": "Fintech Business Case",
-            "class_creator_id": None,
-            "start_datetime": None,
-            "end_datetime": None,
-            "class_size": None,
-            "trainer_id": None,
-            "course_creator_id": None,
-            "course_description": None,
-            "course_name":None,
-            "date_created":None
+            "chapter_name": "Fintech Business Case"
         })
     
 # Run only if we run python directly from this file, not when importing
