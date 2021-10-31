@@ -10,7 +10,7 @@ def todo_index():
     return "View Courses"
 
 # Create
-@course.route('/addCourse',methods = ['POST'])
+@course.route('/add',methods = ['POST'])
 def insert():
     try:
         if request.content_type == 'application/json':
@@ -29,13 +29,11 @@ def insert():
 @course.route('/getAll',methods = ['GET'])
 def return_course():
     all_books = Course.query.all()
-    
     data = [i.to_dict() for i in all_books]
     return jsonify(data)
 
 @course.route('/getCourse/<id>',methods = ['GET'])
 def return_get_course_detail(id):
-    print(id)
     try:
         data = Course.query.get(id)
         return jsonify(data.to_dict())
@@ -48,7 +46,6 @@ def return_get_course_detail(id):
 @course.route('/getCourse/<id>/getAllClasses',methods = ['GET'])
 def return_get_course_classes(id):
     try:
-        print(id)
         data = Course.query.get(id)
         classes = data.classes.all() # Query All Classes for the Specific Course (Syntax: <queried_data>.<relationship>.all())
         allClasses = [i.to_dict() for i in classes]
@@ -59,7 +56,7 @@ def return_get_course_classes(id):
         }),404
         
 # Update
-@course.route('/updateCourse/<id>',methods=['PUT'])
+@course.route('/update/<id>',methods=['PUT'])
 def update_course_detail(id):
     try:
         record = Course.query.get(id)
@@ -85,7 +82,7 @@ def update_course_detail(id):
         }),404
         
 # Delete
-@course.route('/deleteCourse/<id>', methods=['DELETE'])
+@course.route('/delete/<id>', methods=['DELETE'])
 def delete_Todo_Item(id):
     try:
         record = Course.query.get(id)

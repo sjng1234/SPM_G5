@@ -1,5 +1,5 @@
 from .extensions import db
-from sqlalchemy.sql.schema import Column, ForeignKeyConstraint
+from sqlalchemy.sql.schema import Column, ForeignKey, ForeignKeyConstraint
 
 # Model
 # example
@@ -10,7 +10,7 @@ class Todo(db.Model):
     todo_description = Column(db.String(100))
 
     __mapper_args__ = {
-        'polymorphic_identity': 'todoitem'
+        'polymorphic_identity': 'todo'
     }
 
     def __repr__(self):
@@ -69,7 +69,6 @@ class Classes(db.Model):
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
-        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
@@ -82,6 +81,7 @@ class Chapter(db.Model):
     class_id = Column(db.Integer, primary_key=True)
     chapter_id = Column(db.Integer, primary_key=True)
     chapter_name = Column(db.String(255))
+    materials = db.relationship("Material", backref="chapter", lazy="dynamic")
 
     __table_args__ = (
         ForeignKeyConstraint(
@@ -97,6 +97,72 @@ class Chapter(db.Model):
             result[i] = getattr(self, i)
         return result
 
+# Material
+class Material(db.Model):
+    __tablename__ = "material"
+    course_id = Column(db.String(50), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    chapter_id = Column(db.Integer, primary_key=True)
+    material_id = Column(db.Integer, primary_key=True)
+    material_reference = Column(db.String(255))
+
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'material'
+    }
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["class_id", "course_id", "chapter_id"],
+            ["chapter.class_id", "chapter.course_id", "chapter.chapter_id"]
+        ), {}
+    )
+
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        print(col)
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# Material Completion Status
+
+class Material_Completion_Status(db.Model):
+    __tablename__ = "material_completion_status"
+    user_id = Column(db.Integer, primary_key=True)
+    course_id = Column(db.String(50), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    chapter_id = Column(db.Integer, primary_key=True)
+    material_id = Column(db.Integer, primary_key=True)
+    is_completed = Column(db.Boolean)
+    user = db.relationship("User", backref="material_completion_status")
+
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'material_completion_status'
+    }
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["course_id","class_id", "chapter_id", "material_id"],
+            ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id"]
+        ), 
+        ForeignKeyConstraint(
+            ["user_id"],
+            ["user.user_id"]
+        )
+    )
+
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        print(col)
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# Quiz
 class Quiz(db.Model):
     __tablename__ = "quiz"
     course_id = Column(db.String(50), primary_key = True)
@@ -180,3 +246,161 @@ class Quiz_Questions_Options(db.Model):
         for i in col:
             result[i] = getattr(self, i)
         return result
+    
+# User Classes
+class User(db.Model):
+    __tablename__ = "user"
+    user_id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(255))
+    department = Column(db.String(255))
+    position = Column(db.String(255))
+    user_type = Column(db.String(255))
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'user',
+        'polymorphic_on': user_type
+    }
+    
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+    def get_user_name(self):
+        return getattr(self, "name")
+    
+class Learner(User):
+    __tablename__ = "learner"
+    learner_id = Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'learner'
+    }
+    
+class Trainer(User):
+    __tablename__ = "trainer"
+    trainer_id = Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'trainer'
+    }
+    
+class Admin(User):
+    __tablename__ = "admin"
+    admin_id = Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'admin'
+    }
+    
+# qualifications -for trainers
+class Qualifications(db.Model):
+    __tablename__ = "qualifications"
+    trainer_id = Column(db.Integer, primary_key=True)
+    course_id = Column(db.String(255), primary_key=True)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'qualifications'
+    }
+    
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["trainer_id", "course_id"],
+            ["trainer.trainer_id", "trainer.course_id"]
+        ), {}
+    )
+    
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# learner_enrolment - for learners (tag to class)
+class Learner_Enrolment(db.Model):
+    __tablename__ = "learner_enrolment"
+    learner_id = Column(db.Integer, primary_key=True)
+    course_id = Column(db.String(255), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    enrol_date = Column(db.DateTime)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'learner_enrolment'
+    }
+    
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["learner_id", "course_id"],
+            ["learner.learner_id", "learner.course_id"]
+        ), {}
+    )
+    
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# badges - for learners (tag to course)
+class Badge(db.Model):
+    __tablename__ = "badge"
+    learner_id = Column(db.Integer, primary_key=True)
+    course_id = Column(db.String(255), primary_key=True)
+    is_qualified = Column(db.Boolean)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'badge'
+    }
+    
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# quiz_results - for learners (tag to quiz)
+class Quiz_Results(db.Model):
+    __tablename__ = "quiz_results"
+    learner_id = Column(db.Integer, db.ForeignKey("learner.learner_id"), primary_key=True)
+    course_id = Column(db.String(255), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    quiz_id = Column(db.Integer, primary_key=True)
+    score = Column(db.Integer)
+    
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'quiz_results'
+    }
+    
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["course_id", "class_id", "quiz_id"],
+            ["quiz.course_id", "quiz.class_id", "quiz.quiz_id"]
+        ), {}
+    )
+    
+
+# material_completion_status - for learners (tag to material)
+class Material_Completion_Status(db.Model):
+    __tablename__ = "material_completion_status"
+    learner_id = Column(db.Integer, db.ForeignKey("learner.learner_id"), primary_key=True)
+    course_id = Column(db.String(255), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    chapter_id = Column(db.Integer, primary_key=True)
+    material_id = Column(db.Integer, primary_key=True)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'material_completion_status'
+    }
+    
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["course_id", "class_id", "chapter_id", "material_id"],
+            ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id"]
+        ), {}
+    ) 
