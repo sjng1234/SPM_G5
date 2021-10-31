@@ -238,6 +238,8 @@ class User(db.Model):
 class Learner(User):
     __tablename__ = "learner"
     learner_id = Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
+    classes = db.relationship('Learner_Enrolment', backref="learner_enrolment", lazy="dynamic") # Establish one-to-many relationship between learner and learner_enrolment
+    quiz_results = db.relationship('Quiz_Results', backref="quiz_results", lazy="dynamic") # Establish one-to-many relationship between learner and quiz_results
 
     __mapper_args__ = {
         'polymorphic_identity': 'learner'
@@ -286,21 +288,14 @@ class Qualifications(db.Model):
 # learner_enrolment - for learners (tag to class)
 class Learner_Enrolment(db.Model):
     __tablename__ = "learner_enrolment"
-    learner_id = Column(db.Integer, primary_key=True)
-    course_id = Column(db.String(255), primary_key=True)
-    class_id = Column(db.Integer, primary_key=True)
+    learner_id = Column(db.Integer, db.ForeignKey('learner.learner_id'),primary_key=True)
+    course_id = Column(db.String(255), db.ForeignKey('classes.course_id'), primary_key=True)
+    class_id = Column(db.Integer, db.ForeignKey('classes.class_id'),primary_key=True)
     enrol_date = Column(db.DateTime)
     
     __mapper_args__ = {
         'polymorphic_identity': 'learner_enrolment'
     }
-    
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["learner_id", "course_id"],
-            ["learner.learner_id", "learner.course_id"]
-        ), {}
-    )
     
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
@@ -312,8 +307,8 @@ class Learner_Enrolment(db.Model):
 # badges - for learners (tag to course)
 class Badge(db.Model):
     __tablename__ = "badge"
-    learner_id = Column(db.Integer, primary_key=True)
-    course_id = Column(db.String(255), primary_key=True)
+    learner_id = Column(db.Integer, db.ForeignKey('learner.learner_id'), primary_key=True)
+    course_id = Column(db.String(255), db.ForeignKey('course.course_id'), primary_key=True)
     is_qualified = Column(db.Boolean)
     
     __mapper_args__ = {
@@ -336,7 +331,6 @@ class Quiz_Results(db.Model):
     quiz_id = Column(db.Integer, primary_key=True)
     score = Column(db.Integer)
     
-    
     __mapper_args__ = {
         'polymorphic_identity': 'quiz_results'
     }
@@ -348,6 +342,12 @@ class Quiz_Results(db.Model):
         ), {}
     )
     
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
 
 # material_completion_status - for learners (tag to material)
 class Material_Completion_Status(db.Model):
@@ -368,3 +368,10 @@ class Material_Completion_Status(db.Model):
             ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id"]
         ), {}
     ) 
+    
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
