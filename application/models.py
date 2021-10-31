@@ -69,7 +69,6 @@ class Classes(db.Model):
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
-        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
@@ -82,6 +81,7 @@ class Chapter(db.Model):
     class_id = Column(db.Integer, primary_key=True)
     chapter_id = Column(db.Integer, primary_key=True)
     chapter_name = Column(db.String(255))
+    materials = db.relationship("Material", backref="chapter", lazy="dynamic")
 
     __table_args__ = (
         ForeignKeyConstraint(
@@ -97,6 +97,72 @@ class Chapter(db.Model):
             result[i] = getattr(self, i)
         return result
 
+# Material
+class Material(db.Model):
+    __tablename__ = "material"
+    course_id = Column(db.String(50), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    chapter_id = Column(db.Integer, primary_key=True)
+    material_id = Column(db.Integer, primary_key=True)
+    material_reference = Column(db.String(255))
+
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'material'
+    }
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["class_id", "course_id", "chapter_id"],
+            ["chapter.class_id", "chapter.course_id", "chapter.chapter_id"]
+        ), {}
+    )
+
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        print(col)
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# Material Completion Status
+
+class Material_Completion_Status(db.Model):
+    __tablename__ = "material_completion_status"
+    user_id = Column(db.Integer, primary_key=True)
+    course_id = Column(db.String(50), primary_key=True)
+    class_id = Column(db.Integer, primary_key=True)
+    chapter_id = Column(db.Integer, primary_key=True)
+    material_id = Column(db.Integer, primary_key=True)
+    is_completed = Column(db.Boolean)
+    user = db.relationship("User", backref="material_completion_status")
+
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'material_completion_status'
+    }
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["course_id","class_id", "chapter_id", "material_id"],
+            ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id"]
+        ), 
+        ForeignKeyConstraint(
+            ["user_id"],
+            ["user.user_id"]
+        )
+    )
+
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        print(col)
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+# Quiz
 class Quiz(db.Model):
     __tablename__ = "quiz"
     course_id = Column(db.String(50), primary_key = True)
@@ -172,6 +238,24 @@ class Quiz_Questions_Options(db.Model):
             ["quiz_questions.class_id", "quiz_questions.course_id", "quiz_questions.quiz_id", "quiz_questions.question_id"]
         ), {}
     )
+
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        print(col)
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
+
+class User(db.Model):
+    __tablename__ = "user"
+    user_id = Column(db.Integer, primary_key=True)
+    name = Column(db.String(255))
+    department = Column(db.String(255))
+    position = Column(db.String(255))
+    is_learner = Column(db.Boolean)
+    is_trainer = Column(db.Boolean)
+    is_hr = Column(db.Boolean)
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
