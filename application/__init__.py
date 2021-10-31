@@ -5,8 +5,12 @@ from .course import course
 from .classes import classes
 from .chapter import chapter
 from .quiz import quiz
+from .user import user
 from .extensions import db, cors
+
 import pymysql
+
+# For Macbook
 pymysql.install_as_MySQLdb()
 
 def create_app(config_file="settings.py"):
@@ -30,6 +34,7 @@ def create_app(config_file="settings.py"):
     app.register_blueprint(classes)
     app.register_blueprint(chapter)
     app.register_blueprint(quiz)
+    app.register_blueprint(user)
 
     return app
 
