@@ -70,11 +70,6 @@ CREATE TABLE IF NOT EXISTS `quiz_questions` (
   `quiz_id` int,
   `question_id` int,
   `question_description` varchar(255),
-  `answer_course_id` varchar(50),
-  `answer_class_id` int,
-  `answer_quiz_id` int,
-  `answer_question_id` int,
-  `answer_option` varchar(255),
   
   
   PRIMARY KEY (`question_id`, `quiz_id`, `class_id`, `course_id`)
@@ -86,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `quiz_questions_options` (
   `quiz_id` int,
   `question_id` int,
   `option` varchar(255),
+  `is_correct_answer` boolean,
   PRIMARY KEY (`option`, `question_id`, `quiz_id`, `class_id`, `course_id`)
 );
 
@@ -146,16 +142,6 @@ ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`course_id`) REFERENCES `quiz` (`c
 ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`class_id`) REFERENCES `quiz` (`class_id`);
 
 ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`quiz_id`);
-
-ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`answer_course_id`) REFERENCES `quiz_questions_options` (`course_id`);
-
-ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`answer_class_id`) REFERENCES `quiz_questions_options` (`class_id`);
-
-ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`answer_quiz_id`) REFERENCES `quiz_questions_options` (`quiz_id`);
-
-ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`answer_question_id`) REFERENCES `quiz_questions_options` (`question_id`);
-
-ALTER TABLE `quiz_questions` ADD FOREIGN KEY (`answer_option`) REFERENCES `quiz_questions_options` (`option`);
 
 ALTER TABLE `quiz_questions_options` ADD FOREIGN KEY (`course_id`) REFERENCES `quiz_questions` (`course_id`);
 
