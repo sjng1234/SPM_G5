@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from .models import Quiz
+from .models import Quiz, Quiz_Questions_Options
 from .extensions import db
 
 quiz = Blueprint('quiz', __name__, url_prefix="/quiz")
@@ -33,55 +33,84 @@ def return_quizzes():
     data = [i.to_dict() for i in all_quizzes]
     return jsonify(data)
 
+# Get Quiz 
 @quiz.route('/getQuiz/<id>',methods = ['GET'])
 def return_get_quiz_detail(id):
-    print(id)
     try:
         [course_id,class_id,quiz_id] = id.split('-')
         data = Quiz.query.get((course_id,class_id,quiz_id))
-        return jsonify(data.to_dict())
+        questions = data.questions.all()
+        quiz_details = data.to_dict()
+        print(quiz_details)
+        qn_count = 1
+        for question in questions:
+            question_details = question.to_dict()
+            options = question.options.all()
+            option_count = 1
+            for option in options:
+                option_detail = option.to_dict()
+                question_details[f"o{option_count}"] = option_detail
+                option_count += 1
+            quiz_details[f"q{qn_count}"] = question_details
+            qn_count += 1
+
+        return quiz_details
     except Exception:
         return jsonify({
-            "Error Message": "Course with that ID doesn't exists!"
+            "Error Message": "Quiz with that ID doesn't exists!"
         }),404
 
-# Read (Get all classes of a course)   
+# Get Quiz Answer Sheet
+@quiz.route('/getQuizAnswers/<id>',methods = ['GET'])
+def return_get_quiz_answers(id):
+    try:
+        [course_id,class_id,quiz_id] = id.split('-')
+        data = Quiz.query.get((course_id,class_id,quiz_id))
+        questions = data.questions.all()
+        quiz_details = data.to_dict()
+        qn_count = 1
+        
+        for question in questions:
+            print(question)
+            option = question.options.filter(Quiz_Questions_Options.is_correct_answer==True)
+            option_detail = [i.to_dict() for i in option]
+            quiz_details[f"q{qn_count}"] = option_detail
+            qn_count += 1
+
+        return quiz_details
+    except Exception:
+        return jsonify({
+            "Error Message": "Quiz with that ID doesn't exists!"
+        }),404
+
+# Get Quiz Questions Only   
 @quiz.route('/getQuiz/<id>/getAllQn',methods = ['GET'])
 def return_get_all_quiz_questions(id):
     try:
         [course_id,class_id,quiz_id] = id.split('-')
         data = Quiz.query.get((course_id,class_id,quiz_id))
-        classes = data.questions.all() # Query All Classes for the Specific Course (Syntax: <queried_data>.<relationship>.all())
-        allClasses = [i.to_dict() for i in classes]
+        questions = data.questions.all()
+        allClasses = [i.to_dict() for i in questions]
         return jsonify(allClasses)
     except Exception:
         return jsonify({
             "Error Message": "Course with that ID doesn't exists!"
         }),404
-        
+
 # Update
 @quiz.route('/updateQuiz/<id>',methods=['PUT'])
 def update_quiz(id):
     try:
         [course_id,class_id,quiz_id] = id.split('-')
         record = Quiz.query.get((course_id,class_id,quiz_id))
-        print(request.body.content_type)
-        if request.Content_Type == 'application/json':
+        
+        if request.content_type == 'application/json':
             put_data = request.get_json()
-            print(put_data)
-            class_id = put_data.get('class_id')
-            course_id = put_data.get('course_id')
-            question_description = put_data.get('question_description')
-            question_id = put_data.get('question_id')
-            quiz_id = put_data.get('quiz_id')
+            duration = put_data.get('duration')
             
-            setattr(record, "class_id", class_id)
-            setattr(record, "course_id", course_id)
-            setattr(record, "question_description", question_description)
-            setattr(record, "question_id", question_id)
-            setattr(record, "quiz_id", quiz_id)
+            setattr(record, "duration", duration)
             db.session.commit()
-            return jsonify('Updated!')
+            return jsonify('Updated Quiz!')
         return jsonify("Something is wrong with the JSON script!")
     except Exception:
         return jsonify({
@@ -89,14 +118,15 @@ def update_quiz(id):
         }),404
         
 # Delete
-@quiz.route('/deleteCourse/<id>', methods=['DELETE'])
+@quiz.route('/deleteQuiz/<id>', methods=['DELETE'])
 def delete_Todo_Item(id):
     try:
-        record = Course.query.get(id)
+        [course_id,class_id,quiz_id] = id.split('-')
+        record = Quiz.query.get((course_id,class_id,quiz_id))
         db.session.delete(record)
         db.session.commit()
         return jsonify('Deleted')
     except Exception:
         return jsonify({
-            "message": "ToDo ID not found in database."
+            "message": "Quiz not found in database."
         }), 404
