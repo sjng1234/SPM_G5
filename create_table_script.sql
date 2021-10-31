@@ -98,8 +98,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `name` varchar(255),
   `department` varchar(255),
   `position` varchar(255),
-  `user_type` varchar(255),
-  UNIQUE(`user_id`)
+  `user_type` varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS `learner` (
