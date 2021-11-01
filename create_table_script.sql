@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `material_completion_status` (
 CREATE TABLE IF NOT EXISTS `quiz` (
   `course_id` varchar(50),
   `class_id` int,
-  `quiz_id` int NOT NULL,
+  `quiz_id` int AUTO_INCREMENT,
   `duration` int,
   UNIQUE(`quiz_id`),
   PRIMARY KEY (`course_id`, `class_id`, `quiz_id`)
