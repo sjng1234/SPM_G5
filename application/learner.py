@@ -1,4 +1,5 @@
 from flask import Blueprint, json, request, jsonify
+import datetime
 
 from .models import User, Learner, Admin, Trainer, Qualifications, Learner_Enrolment, Material_Completion_Status, Quiz_Results
 from .extensions import db
@@ -44,9 +45,25 @@ def enrol():
     try: 
         if request.content_type == 'application/json':
             post_data = request.get_json()
+            record = Learner_Enrolment.query.filter_by(learner_id=post_data['learner_id'],course_id=post_data['course_id']).all()
+            if len(record) > 0:
+                raise Exception("Learner already enrolled in a class from of this Course")
+            post_data['enrol_date']= datetime.datetime.now()
             new_learner_enrolment = Learner_Enrolment(**post_data)
             db.session.add(new_learner_enrolment)
             db.session.commit()
             return jsonify("Successfully Enrolled!")
     except Exception as e:
-        return jsonify({"Error Message": str(e)}),400
+        return jsonify({"message": str(e)}),400
+    
+# Learner drop from a class
+@learner.route('/drop/<course_Id>/<class_Id>/<learner_Id>',methods=['DELETE'])
+def drop(course_Id,class_Id,learner_Id):
+    try: 
+        record = Learner_Enrolment.query.filter_by(course_id=course_Id,learner_id=learner_Id, class_id=class_Id).first()
+        db.session.delete(record)
+        db.session.commit()
+        return jsonify("Successfully Dropped!")
+    except Exception as e:
+        return jsonify({"message": "User is not enrolled in this class"}),400
+            
