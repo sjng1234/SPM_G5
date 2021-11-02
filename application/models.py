@@ -265,7 +265,7 @@ class Admin(User):
 class Qualifications(db.Model):
     __tablename__ = "qualifications"
     trainer_id = Column(db.Integer, primary_key=True)
-    course_id = Column(db.String(255), primary_key=True)
+    course_id = Column(db.String(255), db.ForeignKey("course.course_id"),primary_key=True)
     
     __mapper_args__ = {
         'polymorphic_identity': 'qualifications'
@@ -273,8 +273,8 @@ class Qualifications(db.Model):
     
     __table_args__ = (
         ForeignKeyConstraint(
-            ["trainer_id", "course_id"],
-            ["trainer.trainer_id", "trainer.course_id"]
+            ["trainer_id"],
+            ["trainer.trainer_id"]
         ), {}
     )
     
