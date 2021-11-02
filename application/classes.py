@@ -1,7 +1,7 @@
 from re import L
 from flask import Blueprint, request, jsonify
 
-from .models import Classes
+from .models import Classes, Course, Trainer
 from .extensions import db
 
 classes = Blueprint('class', __name__, url_prefix="/classes")
@@ -29,17 +29,28 @@ def insert():
 # Get All
 @classes.route("/getAll", methods=["GET"])
 def getAll():
-    all_books = Classes.query.all()
-    count = Classes.query.count()
-    return jsonify({
-        "count": count,
-        "data" : [i.to_dict() for i in all_books]
-        })
+    classes = Classes.query.all()
+    output = []
+    for c in classes:
+        class_details = c.to_dict()
+        trainer_id = class_details['trainer_id']
+        course_id = class_details['course_id']
+        course_detail = Course.query.get(course_id)
+        trainer_detail = Trainer.query.get(trainer_id)
+        print(trainer_detail)
+        class_details.update(course_detail.to_dict())
+        class_details.update(trainer_detail.to_dict())
+        output.append(class_details)
+    return jsonify(output)
+
+
+    
 
 # UPDATE
-@classes.route("/update/<courid>/<classid>", methods=["PUT"])
-def update_class_detail(courid, classid):
+@classes.route("/update/<id>", methods=["PUT"])
+def update_class_detail(id):
     try:
+        [courid, classid] = id.split("-")
         record = Classes.query.filter_by(course_id = courid, class_id = classid).first()
         if request.content_type == "application/json":
             put_data = request.get_json()

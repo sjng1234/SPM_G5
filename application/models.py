@@ -29,7 +29,7 @@ class Course(db.Model):
     course_id = Column(db.String(50), primary_key=True)
     course_name = Column(db.String(255))
     course_description = Column(db.String(255))
-    course_creator_id = Column(db.String(255))
+    course_creator_id = Column(db.String(255), ForeignKey('admin.admin_id'))
     date_created =  Column(db.DateTime)
     classes = db.relationship('Classes', backref="course", lazy="dynamic") # Establish one-to-many relationship between course and classes
     

@@ -43,11 +43,11 @@ INSERT INTO `chapter` (`course_id`, `class_id`, `chapter_id`, `chapter_name`) VA
 --
 
 INSERT INTO `classes` (`course_id`, `class_id`, `class_creator_id`, `start_datetime`, `end_datetime`, `class_size`, `trainer_id`) VALUES
-('IS110', 1, 'Patrick Thng', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 1),
-('IS111', 1, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 1),
-('IS112', 1, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 1),
-('IS110', 2, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 1),
-('IS112', 2, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 1);
+('IS110', 1, 'Patrick Thng', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 3),
+('IS111', 1, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 3),
+('IS112', 1, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 3),
+('IS110', 2, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 3),
+('IS112', 2, 'Lee Yeow Leong', '2021-08-31 00:00:00', '2021-11-29 00:00:00', 40, 3);
 
 --
 -- Dumping data for table `course`
