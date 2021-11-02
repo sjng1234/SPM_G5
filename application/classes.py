@@ -1,7 +1,7 @@
 from re import L
 from flask import Blueprint, request, jsonify
 
-from .models import Classes, Course, Trainer
+from .models import Classes, Course, Trainer, Quiz, Quiz_Questions, Quiz_Questions_Options
 from .extensions import db
 
 classes = Blueprint('class', __name__, url_prefix="/classes")
@@ -41,10 +41,7 @@ def getAll():
         class_details.update(course_detail.to_dict())
         class_details.update(trainer_detail.to_dict())
         output.append(class_details)
-    return jsonify(output)
-
-
-    
+    return jsonify(output)    
 
 # UPDATE
 @classes.route("/update/<id>", methods=["PUT"])
@@ -86,3 +83,36 @@ def delete_chapter(courid, cid):
         return jsonify({
             "Message": "Class not found in Course, delete not successful."
         }), 404
+        
+# Get Quiz Specifics
+@classes.route('/getQuiz/<id>',methods=['GET'])
+def get_quiz(id):
+    try:
+        [courid, classid, quiz_id] = id.split("-")
+        record = Quiz.query.filter_by(course_id = courid, class_id = classid, quiz_id=quiz_id).first()
+        output = {
+            **record.to_dict(),
+            "question": []
+        }
+        question = record.questions.all()
+        for q in question:
+            q_dict = q.to_dict()
+            del q_dict['quiz_id']
+            del q_dict['class_id']
+            del q_dict['course_id']
+            q_dict['options'] = []
+            options = q.options.all()
+            for o in options:
+                o_dict = o.to_dict()
+                del o_dict['question_id']
+                del o_dict['quiz_id']
+                del o_dict['class_id']
+                del o_dict['course_id']
+                q_dict['options'].append(o_dict)
+            output["question"].append(q_dict)
+        
+        return jsonify(output)
+    except Exception as e:
+        return jsonify({
+            'message': str(e)
+        }),400
