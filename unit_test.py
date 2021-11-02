@@ -3,18 +3,20 @@ import sys
 sys.path.insert(0, '.')
 from application.models import Todo, Course, Classes, Chapter
 
-class TestToDoList(unittest.TestCase):
-    """This test case class test the sample Class we have for the Todos class"""
+# class TestToDoList(unittest.TestCase):
+#     """This test case class test the sample Class we have for the Todos class"""
     
-    def test_to_dict(self):
-        todo1 = Todo(title="Hello", todo_description="Success!")
+#     def test_to_dict(self):
+#         todo1 = Todo(title="Hello", todo_description="Success!")
         
-        self.assertEqual(todo1.to_dict(), {
-            'id': None,
-            'title': 'Hello',
-            'todo_description': 'Success!'}
-        )
-class TestCourseList(unittest.TestCase):
+#         self.assertEqual(todo1.to_dict(), {
+#             'id': None,
+#             'title': 'Hello',
+#             'todo_description': 'Success!'}
+#         )
+
+# Test Case ID : TU01
+class TestCourseList(unittest.TestCase): 
 
     def test_to_dict(self):
         course = Course(course_id="IS111")

@@ -21,28 +21,27 @@ class TestIntegration(flask_testing.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
-
-
-class TestCreateTodo(TestIntegration):
-    def test_create_todo(self):
-        todo1 = Todo(title="Hello", todo_description="Success!")
-        db.session.add(todo1)
-        db.session.commit()
+# class TestCreateTodo(TestIntegration):
+#     def test_create_todo(self):
+#         todo1 = Todo(title="Hello", todo_description="Success!")
+#         db.session.add(todo1)
+#         db.session.commit()
         
-        request_body = {
-            "title": "Hello",
-            "todo_description": "Success!"
-        }
+#         request_body = {
+#             "title": "Hello",
+#             "todo_description": "Success!"
+#         }
         
-        response = self.client.post('/todo/insertToDo', data=json.dumps(request_body), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json,'Successfully posted!')
+#         response = self.client.post('/todo/insertToDo', data=json.dumps(request_body), content_type='application/json')
+#         self.assertEqual(response.status_code, 200)
+#         self.assertEqual(response.json,'Successfully posted!')
         
+# Test Case ID: TI01    
 class TestCreateCourse(TestIntegration):
     def test_create_course(self):
         
         course_1 = Course(course_id = "TEST12311", course_name="Test Course With ID", course_description="This should be successful!", course_creator_id=1)
-        
+
         db.session.add(course_1)
         db.session.commit()
         
