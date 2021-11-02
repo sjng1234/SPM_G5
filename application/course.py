@@ -18,16 +18,15 @@ def insert():
             post_data = request.get_json()
             post_data['date_created']=datetime.datetime.now()
             if post_data['course_id'].strip() == '':
-                raise Exception("Course ID is required")
+                return jsonify({"Error Message": "Course ID is required"}), 404
             new_course = Course(**post_data)
             db.session.add(new_course)
             db.session.commit()
             return jsonify("Successfully posted!")
         return jsonify("Oops something went wrong with the JSON script!")
-    except Exception as e:
-        print(str(e))
+    except Exception:        
         return jsonify({
-            "Error Message": str(e)
+            "Error Message": "Course ID exists already!"
         }), 404
 
 # Read
