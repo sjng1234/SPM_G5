@@ -40,6 +40,11 @@ python application.py
 python unit_test.py
 ```
 
+## Step 5c: Run the IntegrationTest
+```
+python integration_test.py
+```
+
 ## To update requirements after adding new packages
 ```
 pip freeze > requirements.txt 
