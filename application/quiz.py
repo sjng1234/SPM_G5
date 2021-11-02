@@ -15,15 +15,11 @@ def insert():
     try:
         if request.content_type == 'application/json':
             post_data = request.get_json()
-            print({
-                "course_id" : post_data["course_id"],
-                "class_id" : post_data["class_id"],
-                "duration" : post_data["duration"]
-            })
             new_quiz = Quiz(**{
                 "course_id" : post_data["course_id"],
                 "class_id" : post_data["class_id"],
-                "duration" : post_data["duration"]
+                "duration" : post_data["duration"],
+                "quiz_id" : post_data["quiz_id"]
             })
             db.session.add(new_quiz)
             db.session.commit()
