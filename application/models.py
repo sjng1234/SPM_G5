@@ -357,6 +357,7 @@ class Material_Completion_Status(db.Model):
     class_id = Column(db.Integer, primary_key=True)
     chapter_id = Column(db.Integer, primary_key=True)
     material_id = Column(db.Integer, primary_key=True)
+    is_completed = Column(db.Boolean)
     
     __mapper_args__ = {
         'polymorphic_identity': 'material_completion_status'
