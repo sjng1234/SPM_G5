@@ -131,7 +131,7 @@ class Quiz(db.Model):
     __tablename__ = "quiz"
     course_id = Column(db.String(50), primary_key = True)
     class_id = Column(db.Integer, primary_key=True)
-    quiz_id = Column(db.Integer, primary_key=True)
+    quiz_id = Column(db.Integer, primary_key=True, autoincrement=True)
     duration = Column(db.Integer)
     questions = db.relationship('Quiz_Questions', backref="questions", lazy="dynamic")
     

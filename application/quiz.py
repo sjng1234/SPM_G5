@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from .models import Quiz, Quiz_Questions_Options
+from .models import Quiz, Quiz_Questions_Options, Quiz_Questions
 from .extensions import db
 
 quiz = Blueprint('quiz', __name__, url_prefix="/quiz")
@@ -15,14 +15,53 @@ def insert():
     try:
         if request.content_type == 'application/json':
             post_data = request.get_json()
-            new_quiz = Quiz(**post_data)
+            print({
+                "course_id" : post_data["course_id"],
+                "class_id" : post_data["class_id"],
+                "duration" : post_data["duration"]
+            })
+            new_quiz = Quiz(**{
+                "course_id" : post_data["course_id"],
+                "class_id" : post_data["class_id"],
+                "duration" : post_data["duration"]
+            })
             db.session.add(new_quiz)
             db.session.commit()
-            return jsonify("Successfully created a new quiz!")
+            db.session.flush()
+            # print(new_quiz.quiz_id)
+            questions = post_data['question']
+            for q in questions:
+                question_id = q['question_id']
+                question_description = q['question_description']
+                new_qn = Quiz_Questions(**{
+                    "course_id" : new_quiz.course_id,
+                    "quiz_id" : new_quiz.quiz_id,
+                    "class_id" : new_quiz.class_id,
+                    "question_id" : question_id,
+                    "question_description" : question_description
+                })
+                db.session.add(new_qn)
+                db.session.commit()
+                db.session.flush()
+                # print(new_qn.question_id)
+                for o in q["options"]:
+                    new_option = Quiz_Questions_Options(**{
+                        "course_id" : new_qn.course_id,
+                        "quiz_id" : new_qn.quiz_id,
+                        "class_id" : new_qn.class_id,
+                        "question_id" : new_qn.question_id,
+                        "option" : o["option"],
+                        "is_correct_answer" : o["is_correct_answer"]
+                    })
+                    db.session.add(new_option)
+                    db.session.commit()
+                    db.session.flush()
+                    # print(new_option.option)
+            return jsonify(f"Successfully created a new quiz! {new_quiz.course_id}-{new_quiz.class_id}-{new_quiz.quiz_id}")
         return jsonify("Oops something went wrong with the JSON script!")
-    except Exception:
+    except Exception as e:
         return jsonify({
-            "Error Message": "An error occurred in adding, please try again"
+            "Error Message": str(e)
         }), 404
 
 # Read
