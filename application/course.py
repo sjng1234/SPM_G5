@@ -17,12 +17,15 @@ def insert():
         if request.content_type == 'application/json':
             post_data = request.get_json()
             post_data['date_created']=datetime.datetime.now()
+            if post_data['course_id'].strip() == '':
+                raise Exception("Course ID is required")
             new_course = Course(**post_data)
             db.session.add(new_course)
             db.session.commit()
             return jsonify("Successfully posted!")
         return jsonify("Oops something went wrong with the JSON script!")
     except Exception as e:
+        print(str(e))
         return jsonify({
             "Error Message": str(e)
         }), 404
@@ -91,7 +94,7 @@ def delete_Todo_Item(id):
         db.session.delete(record)
         db.session.commit()
         return jsonify('Deleted')
-    except Exception:
+    except Exception as e:
         return jsonify({
-            "message": "ToDo ID not found in database."
+            "message": str(e)
         }), 404
