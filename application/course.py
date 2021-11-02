@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+import datetime
 
 from .models import Course
 from .extensions import db
@@ -15,14 +16,15 @@ def insert():
     try:
         if request.content_type == 'application/json':
             post_data = request.get_json()
+            post_data['date_created']=datetime.datetime.now()
             new_course = Course(**post_data)
             db.session.add(new_course)
             db.session.commit()
             return jsonify("Successfully posted!")
         return jsonify("Oops something went wrong with the JSON script!")
-    except Exception:
+    except Exception as e:
         return jsonify({
-            "Error Message": "An error occurred in adding, please try again"
+            "Error Message": str(e)
         }), 404
 
 # Read
