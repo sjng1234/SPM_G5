@@ -71,8 +71,8 @@ def update_course_detail(id):
             description = put_data.get('course_description')
             creator_id = put_data.get('course_creator_id')
             created = put_data.get('date_created')
-            if 'id' in put_data:
-                record.id = put_data.get('id')
+            if 'course_id' in put_data:
+                record.course_id = put_data.get('id')
             setattr(record, "course_name", name)
             setattr(record, "course_description", description)
             setattr(record, "course_creator_id", creator_id)
@@ -95,5 +95,5 @@ def delete_Todo_Item(id):
         return jsonify('Deleted')
     except Exception as e:
         return jsonify({
-            "message": str(e)
+            "message": "Course ID does not exist in the database"
         }), 404

@@ -55,7 +55,7 @@ class Classes(db.Model):
     __tablename__ = "classes"
     course_id = Column(db.String(50), db.ForeignKey("course.course_id"), primary_key = True)
     class_id = Column(db.Integer, primary_key=True)
-    class_creator_id = Column(db.String(255))
+    class_creator_id = Column(db.Integer)
     start_datetime = Column(db.DateTime)
     end_datetime = Column(db.DateTime)
     class_size = Column(db.Integer)
@@ -248,9 +248,9 @@ class Learner(User):
 class Trainer(User):
     __tablename__ = "trainer"
     trainer_id = Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
-
+    
     __mapper_args__ = {
-        'polymorphic_identity': 'trainer'
+        'polymorphic_identity': 'trainer' 
     }
     
 class Admin(User):
