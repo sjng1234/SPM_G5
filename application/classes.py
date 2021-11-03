@@ -1,7 +1,7 @@
 from re import L
 from flask import Blueprint, request, jsonify
 
-from .models import Classes, Course, Trainer, Quiz, Quiz_Questions, Quiz_Questions_Options
+from .models import Classes, Course, Trainer, User, Quiz, Quiz_Questions, Quiz_Questions_Options
 from .extensions import db
 
 classes = Blueprint('class', __name__, url_prefix="/classes")
@@ -29,19 +29,42 @@ def insert():
 # Get All
 @classes.route("/getAll", methods=["GET"])
 def getAll():
-    classes = Classes.query.all()
-    output = []
-    for c in classes:
-        class_details = c.to_dict()
-        trainer_id = class_details['trainer_id']
-        course_id = class_details['course_id']
-        course_detail = Course.query.get(course_id)
-        trainer_detail = Trainer.query.get(trainer_id)
-        print(trainer_detail)
-        class_details.update(course_detail.to_dict())
-        class_details.update(trainer_detail.to_dict())
-        output.append(class_details)
-    return jsonify(output)    
+    try:
+        classes = Classes.query.all()
+        output = []
+        for c in classes:
+            class_details = c.to_dict()
+            trainer_id = class_details['trainer_id']
+            course_id = class_details['course_id']
+            course_detail = Course.query.get(course_id)
+            trainer_id_exist = Trainer.query.get(trainer_id)
+            if trainer_id_exist:
+                trainer_detail = User.query.get(trainer_id_exist.trainer_id)
+                class_details.update(course_detail.to_dict())
+                class_details.update(trainer_detail.to_dict())
+                output.append(class_details)
+                # return jsonify(output)    
+            else:
+                return jsonify({
+                    "Error Message": "Invalid Trainer ID"
+                }), 404
+        return jsonify(output)
+    except Exception:
+        return jsonify({
+            "Error Message": "An error has occurred when getting classes, please try again"
+        }), 404
+# Get One 
+@classes.route("/get/<id>",methods=["GET"])
+def getOne(id):
+    try:
+        [cour_id,class_id] = id.split("-")
+        record = Classes.query.filter_by(class_id=class_id, course_id=cour_id).first()
+        return jsonify(record.to_dict())
+    except Exception as e:
+        print(str(e))
+        return jsonify({
+            "message": "Class not found"
+        }),400
 
 # UPDATE
 @classes.route("/update/<id>", methods=["PUT"])
