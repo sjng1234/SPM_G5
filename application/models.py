@@ -96,7 +96,7 @@ class Chapter(db.Model):
         for i in col:
             result[i] = getattr(self, i)
         return result
-
+        
 # Material
 class Material(db.Model):
     __tablename__ = "material"
@@ -120,7 +120,6 @@ class Material(db.Model):
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
-        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
@@ -148,7 +147,6 @@ class Quiz(db.Model):
     
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
-        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
@@ -176,7 +174,6 @@ class Quiz_Questions(db.Model):
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
-        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
@@ -205,7 +202,6 @@ class Quiz_Questions_Options(db.Model):
 
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
-        print(col)
         result = {}
         for i in col:
             result[i] = getattr(self, i)
