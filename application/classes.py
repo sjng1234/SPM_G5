@@ -1,7 +1,7 @@
 from re import L
 from flask import Blueprint, request, jsonify
 
-from .models import Classes, Course, Trainer, User, Quiz, Quiz_Questions, Quiz_Questions_Options
+from .models import Classes, Course, Trainer, User, Quiz, Quiz_Questions, Quiz_Questions_Options, Chapter
 from .extensions import db
 
 classes = Blueprint('class', __name__, url_prefix="/classes")
@@ -155,3 +155,16 @@ def get_quiz(id):
         return jsonify({
             'message': "Quiz ID is invalid"
         }),400
+
+@classes.route("/getChapters/<id>", methods = ["GET"])
+def get_all_chapters(id):
+    try:
+        [courid, cid] = id.split("-")
+        record = Classes.query.filter_by(course_id = courid, class_id = cid).first().chapters.all()
+        # record = Chapter.query.filter_by(course_id = courid, class_id = cid).all()
+        result = [i.to_dict() for i in record]
+        return jsonify(result)
+    except:
+        return jsonify({
+            "Error Message": "Chapter is not found"
+        }), 400

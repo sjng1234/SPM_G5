@@ -4,9 +4,11 @@ from .todo import todo
 from .course import course
 from .classes import classes
 from .chapter import chapter
+from .material import material
 from .quiz import quiz
 from .admin import admin
 from .learner import learner
+from .trainer import trainer
 from .quiz_questions import quiz_questions
 
 from .extensions import db, cors
@@ -36,9 +38,11 @@ def create_app(config_file="settings.py"):
     app.register_blueprint(course)
     app.register_blueprint(classes)
     app.register_blueprint(chapter)
+    app.register_blueprint(material)
     app.register_blueprint(quiz)
     app.register_blueprint(admin)
     app.register_blueprint(learner)
+    app.register_blueprint(trainer)
     app.register_blueprint(quiz_questions)
 
 

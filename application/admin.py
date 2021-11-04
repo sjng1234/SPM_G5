@@ -33,7 +33,6 @@ def create_user():
     except Exception as e:
         return jsonify({"message": str(e)}), 400
 
-# Create Course [To be Discussed]
 
 # Create Class [To be Discussed]
 
@@ -50,6 +49,17 @@ def get_all_instructors_qualification():
     record = Qualifications.query.all()
     result = [i.to_dict() for i in record]
     return jsonify(result)
+
+# Get All Qualified Trainer to teach a specific course
+@admin.route("/<id>/getAllQualifiedTrainer", methods = ["GET"])
+def get_course_qualified_trainers(id):
+    try:
+        record = Qualifications.query.filter_by(course_id = id).all()
+        result = [i.to_dict() for i in record]
+        return jsonify(result)
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message":"Please Enter a valid Course ID"}), 400
 
 # Get All Learners Quiz Results
 @admin.route("/getAllLearnersQuizResults", methods = ["GET"])

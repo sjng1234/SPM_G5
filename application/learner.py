@@ -93,4 +93,28 @@ def drop(id):
         return jsonify("Successfully Dropped!")
     except Exception as e:
         return jsonify({"message": "User is not enrolled in this class"}),400
-            
+
+# Learner Completes a chapter and update MaterialCompletionStatus
+@learner.route('/completeMaterial',methods=['PUT'])
+def update_material_completion_status():
+    try: 
+        post_data = request.get_json()
+        new_state = Material_Completion_Status(**post_data)
+        db.session.add(new_state)
+        db.session.commit()
+        return jsonify("Successfully Updated Material Completion Status!")
+    except Exception as e:
+        print(str(e))
+        return jsonify({"message": "Something went wrong with updating the Material Completion Status"}),400
+    
+# Retrieve Learner's Completed Materials for a specific class
+@learner.route('/getCompletedMaterials/<id>',methods=['GET'])
+def get_completed_materials(id):
+    try:
+        [course_Id,class_Id,learner_Id] = id.split('-')
+        completed_materials = Material_Completion_Status.query.filter_by(course_id=course_Id,learner_id=learner_Id, class_id=class_Id, is_completed=True).all()
+        all_completed_materials = [i.to_dict() for i in completed_materials]
+        return jsonify(all_completed_materials)
+    except Exception as e:
+        print(str(e))
+        return jsonify({"message": "Please Enter a Valid Query courseId-Class_Id-LearnerId"}),400

@@ -26,23 +26,24 @@ def add_chapter():
             db.session.add(new_chapter)
             db.session.commit()
             return jsonify("New chapter has been added into the class!")
-    except Exception:
+    except Exception as e:
         return jsonify({
             "Error Message": "An error has occurred when adding chapter, please try again"
         }), 404
 
 
-# Get all chapters from one class in the course
-@chapter.route("/getOne/<courid>/<cid>", methods = ["GET"])
-def get_all_chapters(courid, cid):
-    try:
-        record = Chapter.query.filter_by(course_id = courid, class_id = cid).all()
-        result = [i.to_dict() for i in record]
-        return jsonify(result)
-    except:
-        return jsonify({
-            "Error Message": "Chapter is not found"
-        })
+# # Get all chapters from one class in the course -> Shift to Classes
+# @chapter.route("/getOne/<id>", methods = ["GET"])
+# def get_all_chapters(id):
+#     try:
+#         [courid, cid] = id.split("-")
+#         record = Chapter.query.filter_by(course_id = courid, class_id = cid).all()
+#         result = [i.to_dict() for i in record]
+#         return jsonify(result)
+#     except:
+#         return jsonify({
+#             "Error Message": "Chapter is not found"
+#         }), 400
 
 # UPDATE
 @chapter.route("/update/<courid>/<classid>/<chapid>", methods=["PUT"])
@@ -74,3 +75,17 @@ def delete_chapter(courid, cid, chapid):
         return jsonify({
             "Message": "Chapter not found in Class, delete not successful."
         }), 404
+        
+# Retrieve All Materials under this chapter
+@chapter.route("/<id>/getMaterials", methods = ["GET"])
+def get_all_materials(id):
+    try:
+        [course_id, class_id, chapter_id] = id.split("-")
+        all_materials = Chapter.query.filter_by(course_id = course_id, class_id = class_id, chapter_id = chapter_id).first().materials.all()
+        output = [i.to_dict() for i in all_materials]
+        return jsonify(output)
+    except Exception as e:
+        # print(str(e))
+        return jsonify({
+            "Error Message": "Invalid Chapter"
+        })
