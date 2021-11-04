@@ -248,6 +248,7 @@ class Learner(User):
 class Trainer(User):
     __tablename__ = "trainer"
     trainer_id = Column(db.Integer, db.ForeignKey("user.user_id"), primary_key=True)
+    all_qualified_course = db.relationship('Qualifications', backref="qualifications", lazy="dynamic") # Establish one-to-many relationship between trainer and Qualifications
     
     __mapper_args__ = {
         'polymorphic_identity': 'trainer' 
@@ -264,19 +265,12 @@ class Admin(User):
 # qualifications -for trainers
 class Qualifications(db.Model):
     __tablename__ = "qualifications"
-    trainer_id = Column(db.Integer, primary_key=True)
+    trainer_id = Column(db.Integer, db.ForeignKey("trainer.trainer_id"), primary_key=True)
     course_id = Column(db.String(255), db.ForeignKey("course.course_id"),primary_key=True)
     
     __mapper_args__ = {
         'polymorphic_identity': 'qualifications'
     }
-    
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["trainer_id"],
-            ["trainer.trainer_id"]
-        ), {}
-    )
     
     def to_dict(self):
         col = self.__mapper__.column_attrs.keys()
