@@ -58,10 +58,17 @@ def getAll():
 def getOne(id):
     try:
         [cour_id,class_id] = id.split("-")
-        record = Classes.query.filter_by(class_id=class_id, course_id=cour_id).first()
-        return jsonify(record.to_dict())
+        record = Classes.query.filter_by(class_id=class_id, course_id=cour_id).first().to_dict()
+        trainer_id = record['trainer_id']
+        course_id = record['course_id']
+        course_detail = Course.query.get(course_id)
+        trainer_id_exist = Trainer.query.get(trainer_id)
+        trainer_detail = User.query.get(trainer_id_exist.trainer_id)
+        record.update(course_detail.to_dict())
+        record.update(trainer_detail.to_dict())
+        return jsonify(record)
     except Exception as e:
-        print(str(e))
+        # print(str(e))
         return jsonify({
             "message": "Class not found"
         }),400
@@ -79,12 +86,17 @@ def update_class_detail(id):
             end = put_data.get("end_datetime")
             start = put_data.get("start_datetime")
             tid = put_data.get("trainer_id")
-
-            setattr(record, "class_creator_id", creator_id)
-            setattr(record, "class_size", size)
-            setattr(record, "end_datetime", end)
-            setattr(record, "start_datetime", start)
-            setattr(record, "trainer_id", tid)
+            
+            if creator_id:
+                setattr(record, "class_creator_id", creator_id)
+            if size:
+                setattr(record, "class_size", size)
+            if end:
+                setattr(record, "end_datetime", end)
+            if start:
+                setattr(record, "start_datetime", start)
+            if tid:
+                setattr(record, "trainer_id", tid)
 
             db.session.commit()
             return jsonify("Successful update of class content!")
@@ -95,10 +107,11 @@ def update_class_detail(id):
         }),404
 
 # DELETE
-@classes.route("/delete/<courid>/<cid>", methods = ["DELETE"])
-def delete_chapter(courid, cid):
+@classes.route("/delete/<id>", methods = ["DELETE"])
+def delete_chapter(id):
     try:
-        record = Classes.query.filter_by(course_id = courid, class_id = cid).first()
+        [courid, classid] = id.split("-")
+        record = Classes.query.filter_by(course_id = courid, class_id = classid).first()
         db.session.delete(record)
         db.session.commit()
         return jsonify("Class deleted from Course!")
