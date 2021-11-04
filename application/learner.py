@@ -16,6 +16,18 @@ def get_learner_enrolled_classes(learner_id):
     try:
         enrolled_classes = Learner.query.get(learner_id).classes.all()
         all_enrolled_classes = [i.to_dict() for i in enrolled_classes]
+        dictionary = {}
+        all_dates = []
+        for item in all_enrolled_classes:
+            date = item["enrol_date"]
+            dictionary[date] = item
+            all_dates.append(date)
+        all_dates.sort()
+        all_dates.reverse()
+        count = 0
+        for ordered_date in all_dates:
+            all_enrolled_classes[count] = dictionary[ordered_date]
+            count+=1
         return jsonify(all_enrolled_classes)
     except Exception as e:
         return jsonify({"Error Message": str(e)}),400
