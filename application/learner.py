@@ -30,6 +30,20 @@ def get_quiz_results_all(learner_id):
     except Exception as e:
         return jsonify({"Error Message": str(e)}),400
 
+# Learner Submits Quiz Results
+@learner.route('/submitQuizResults', methods=['PUT'])
+def submit_quiz_results():
+    try:
+        put_data = request.get_json()
+        result = Quiz_Results(**put_data)
+        db.session.add(result)
+        db.session.commit()
+        return jsonify({"Message": "Quiz Results Submitted"})
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message": "Something went wrong with submitting the results"}),400
+
+
 # Get learner's specific quiz_results
 @learner.route('/getAllQuizResults/<learner_id>/<quiz_id>', methods=['GET'])
 def get_quiz_results_one(learner_id,quiz_id):
@@ -40,7 +54,7 @@ def get_quiz_results_one(learner_id,quiz_id):
         return jsonify({"Error Message": str(e)}),400
     
 # Learner Enrol in a class
-@learner.route('/enrol',methods=['PUT'])
+@learner.route('/enrol',methods=['POST'])
 def enrol():
     try: 
         if request.content_type == 'application/json':
@@ -57,9 +71,10 @@ def enrol():
         return jsonify({"message": str(e)}),400
     
 # Learner drop from a class
-@learner.route('/drop/<course_Id>/<class_Id>/<learner_Id>',methods=['DELETE'])
-def drop(course_Id,class_Id,learner_Id):
+@learner.route('/drop/<id>',methods=['DELETE'])
+def drop(id):
     try: 
+        [course_Id,class_Id,learner_Id] = id.split('-')
         record = Learner_Enrolment.query.filter_by(course_id=course_Id,learner_id=learner_Id, class_id=class_Id).first()
         db.session.delete(record)
         db.session.commit()

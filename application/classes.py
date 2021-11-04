@@ -130,6 +130,7 @@ def get_quiz(id):
             **record.to_dict(),
             "question": []
         }
+        # return jsonify(output)
         question = record.questions.all()
         for q in question:
             q_dict = q.to_dict()
@@ -144,11 +145,13 @@ def get_quiz(id):
                 del o_dict['quiz_id']
                 del o_dict['class_id']
                 del o_dict['course_id']
+                del o_dict['is_correct_answer']
                 q_dict['options'].append(o_dict)
             output["question"].append(q_dict)
         
         return jsonify(output)
     except Exception as e:
+        print(str(e))
         return jsonify({
-            'message': str(e)
+            'message': "Quiz ID is invalid"
         }),400

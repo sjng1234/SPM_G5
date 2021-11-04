@@ -56,8 +56,9 @@ def insert():
             return jsonify(f"Successfully created a new quiz! {new_quiz.course_id}-{new_quiz.class_id}-{new_quiz.quiz_id}")
         return jsonify("Oops something went wrong with the JSON script!")
     except Exception as e:
+        # print(str(e))
         return jsonify({
-            "Error Message": str(e)
+            "Error Message": "Quiz ID for this class already exists!"
         }), 404
 
 # Read
@@ -108,7 +109,7 @@ def return_get_quiz_answers(id):
         for question in questions:
             print(question)
             option = question.options.filter(Quiz_Questions_Options.is_correct_answer==True)
-            option_detail = [i.to_dict() for i in option]
+            option_detail = [i.to_dict()['option'] for i in option]
             quiz_details[f"q{qn_count}"] = option_detail
             qn_count += 1
 
@@ -118,21 +119,21 @@ def return_get_quiz_answers(id):
             "Error Message": "Quiz with that ID doesn't exists!"
         }),404
 
-# Get Quiz Questions Only   
-@quiz.route('/getQuiz/<id>/getAllQn',methods = ['GET'])
-def return_get_all_quiz_questions(id):
-    try:
-        [course_id,class_id,quiz_id] = id.split('-')
-        data = Quiz.query.get((course_id,class_id,quiz_id))
-        questions = data.questions.all()
-        allClasses = [i.to_dict() for i in questions]
-        return jsonify(allClasses)
-    except Exception:
-        return jsonify({
-            "Error Message": "Course with that ID doesn't exists!"
-        }),404
+# # Get Quiz Questions Only   -> Shifted to classes route
+# @quiz.route('/getQuiz/<id>/getAllQn',methods = ['GET'])
+# def return_get_all_quiz_questions(id):
+#     try:
+#         [course_id,class_id,quiz_id] = id.split('-')
+#         data = Quiz.query.get((course_id,class_id,quiz_id))
+#         questions = data.questions.all()
+#         allClasses = [i.to_dict() for i in questions]
+#         return jsonify(allClasses)
+#     except Exception:
+#         return jsonify({
+#             "Error Message": "Course with that ID doesn't exists!"
+#         }),404
 
-# Update
+# Update (Not in use yet)
 @quiz.route('/updateQuiz/<id>',methods=['PUT'])
 def update_quiz(id):
     try:
@@ -142,7 +143,6 @@ def update_quiz(id):
         if request.content_type == 'application/json':
             put_data = request.get_json()
             duration = put_data.get('duration')
-            
             setattr(record, "duration", duration)
             db.session.commit()
             return jsonify('Updated Quiz!')
