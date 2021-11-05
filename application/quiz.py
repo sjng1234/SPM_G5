@@ -25,7 +25,7 @@ def insert():
             db.session.commit()
             db.session.flush()
             # print(new_quiz.quiz_id)
-            questions = post_data['question']
+            questions = post_data['questions']
             for q in questions:
                 question_id = q['question_id']
                 question_description = q['question_description']
@@ -56,7 +56,6 @@ def insert():
             return jsonify(f"Successfully created a new quiz! {new_quiz.course_id}-{new_quiz.class_id}-{new_quiz.quiz_id}")
         return jsonify("Oops something went wrong with the JSON script!")
     except Exception as e:
-        # print(str(e))
         return jsonify({
             "Error Message": "Quiz ID for this class already exists!"
         }), 404

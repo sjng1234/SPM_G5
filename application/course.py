@@ -52,7 +52,15 @@ def return_get_course_classes(id):
     try:
         data = Course.query.get(id)
         classes = data.classes.all() # Query All Classes for the Specific Course (Syntax: <queried_data>.<relationship>.all())
-        allClasses = [i.to_dict() for i in classes]
+        allClasses = []
+        for i in classes:
+            c = i.to_dict()
+            quiz = i.quiz.all()
+            if(len(quiz)>0):
+                c["quiz_created"] = True
+            else:
+                c["quiz_created"] = False
+            allClasses.append(c)
         return jsonify(allClasses)
     except Exception:
         return jsonify({
