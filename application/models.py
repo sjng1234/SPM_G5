@@ -366,3 +366,20 @@ class Material_Completion_Status(db.Model):
         for i in col:
             result[i] = getattr(self, i)
         return result
+
+# course_prequisites - for trainers (tag to course)
+class Course_Prequisites(db.Model):
+    __tablename__ = "course_prequisites"
+    course_id = Column(db.String(255), db.ForeignKey("course.course_id"),primary_key=True)
+    prereq_course_id = Column(db.String(255), db.ForeignKey("course.course_id"),primary_key=True)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'course_prequisites'
+    }
+    
+    def to_dict(self):
+        col = self.__mapper__.column_attrs.keys()
+        result = {}
+        for i in col:
+            result[i] = getattr(self, i)
+        return result
