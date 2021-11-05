@@ -57,12 +57,11 @@ CREATE TABLE IF NOT EXISTS `material_completion_status` (
 );
 
 CREATE TABLE IF NOT EXISTS `quiz` (
+  `quiz_id` int,
   `course_id` varchar(50),
   `class_id` int,
-  `quiz_id` int AUTO_INCREMENT,
   `duration` int,
-  UNIQUE(`quiz_id`),
-  PRIMARY KEY (`course_id`, `class_id`, `quiz_id`)
+  PRIMARY KEY (`quiz_id`,`course_id`,`class_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `quiz_questions` (
