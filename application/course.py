@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import datetime
 
-from .models import Course
+from .models import Course,Course_Prequisites
 from .extensions import db
 
 course = Blueprint('course', __name__, url_prefix="/course")
@@ -105,3 +105,37 @@ def delete_Todo_Item(id):
         return jsonify({
             "message": "Course ID does not exist in the database"
         }), 404
+        
+# Add Course Prerequisite
+@course.route('/addPreReq',methods=['PUT'])
+def add_course_requisite():
+    try:
+        put_data = request.get_json()
+        new_prereq = Course_Prequisites(**put_data)
+        db.session.add(new_prereq)
+        db.session.commit()
+        return jsonify("Successfully Added Course Pre-requisite!")
+    except Exception as e:
+        print(str(e))
+        return jsonify({
+            "Error Message": "Error in adding Course pre-requisite, please make sure valid course ids are entered"
+        }), 400
+        
+# Get Course Prerequisite
+@course.route('/<id>/getPreReq',methods=['GET'])
+def get_course_requisite(id):
+    try:
+        records = Course_Prequisites.query.filter_by(course_id=id).all()
+        output = {}
+        output['course_id'] = id
+        output['Number_of_Pre-Requisites'] = 0
+        output['Pre-Requisites-List'] = []
+        for i in records:
+            output['Number_of_Pre-Requisites']+=1
+            output['Pre-Requisites-List'].append(i.to_dict()['prereq_course_id'])
+        return jsonify(output)
+    except Exception as e:
+        print(str(e))
+        return jsonify({
+            "Error Message": "Please Make Sure Course_ID is a valid course_ID"
+        }), 400

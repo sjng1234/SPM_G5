@@ -104,12 +104,12 @@ def return_get_quiz_answers(id):
         questions = data.questions.all()
         quiz_details = data.to_dict()
         qn_count = 1
-        quiz_details['answers'] = {}
+        quiz_details["answers"] = {}
         for question in questions:
             print(question)
             option = question.options.filter(Quiz_Questions_Options.is_correct_answer==True)
             option_detail = [i.to_dict()['option'] for i in option]
-            quiz_details['answers'][f"q{qn_count}"] = option_detail[0]
+            quiz_details["answers"][f"q{qn_count}"] = option_detail[0]
             qn_count += 1
 
         return quiz_details

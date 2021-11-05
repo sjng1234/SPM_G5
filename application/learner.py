@@ -1,7 +1,7 @@
 from flask import Blueprint, json, request, jsonify
 import datetime
 
-from .models import User, Learner, Admin, Trainer, Qualifications, Learner_Enrolment, Material_Completion_Status, Quiz_Results
+from .models import User, Learner, Admin, Trainer, Qualifications, Learner_Enrolment, Material_Completion_Status, Quiz_Results, Badge
 from .extensions import db
 
 learner = Blueprint('learner', __name__,url_prefix='/learner')
@@ -97,7 +97,7 @@ def drop(id):
 # Learner Completes a chapter and update MaterialCompletionStatus
 @learner.route('/completeMaterial',methods=['PUT'])
 def update_material_completion_status():
-    try: 
+    try:
         post_data = request.get_json()
         new_state = Material_Completion_Status(**post_data)
         db.session.add(new_state)
@@ -118,3 +118,27 @@ def get_completed_materials(id):
     except Exception as e:
         print(str(e))
         return jsonify({"message": "Please Enter a Valid Query courseId-Class_Id-LearnerId"}),400
+    
+# Learner Add Course Complete Badge
+@learner.route('/addBadge',methods=['POST'])
+def add_complete_course_badge():
+    try:
+        post_data = request.get_json()
+        new_badge = Badge(**post_data)
+        db.session.add(new_badge)
+        db.session.commit()
+        return jsonify("Successfully Added Course Complete Badge!")
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message": "Please Enter a Valid Course ID/UserID"}),400
+    
+# Learners Get All Completed Badges
+@learner.route('/<id>/getAllBadges',methods=['GET'])
+def get_learner_all_badges(id):
+    try:
+        badges = Badge.query.filter_by(learner_id=id).all()
+        output = {'learner_id': id, 'num_badges': len(badges),'badges': [i.to_dict()['course_id'] for i in badges]}
+        return jsonify(output)
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message": "Please Enter a Valid User ID"}),400
