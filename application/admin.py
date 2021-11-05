@@ -81,3 +81,4 @@ def get_all_learners_enrolment():
     record = Learner_Enrolment.query.all()
     result = [i.to_dict() for i in record]
     return jsonify(result)
+

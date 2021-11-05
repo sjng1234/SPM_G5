@@ -135,6 +135,12 @@ CREATE TABLE IF NOT EXISTS `learner_enrolment` (
   PRIMARY KEY (`learner_id`, `course_id`)
 );
 
+CREATE TABLE IF NOT EXISTS `course_prerequisites` (
+  `course_id` varchar(50),
+  `prereq_course_id` varchar(50),
+  PRIMARY KEY (`course_id`, `prereq_course_id`)
+);
+
 ALTER TABLE `learner` ADD FOREIGN KEY (`learner_id`) REFERENCES `user` (`user_id`);
 
 ALTER TABLE `admin` ADD FOREIGN KEY (`admin_id`) REFERENCES `user` (`user_id`);
@@ -202,3 +208,7 @@ ALTER TABLE `learner_enrolment` ADD FOREIGN KEY (`learner_id`) REFERENCES `learn
 ALTER TABLE `learner_enrolment` ADD FOREIGN KEY (`course_id`) REFERENCES `classes` (`course_id`);
 
 ALTER TABLE `learner_enrolment` ADD FOREIGN KEY (`class_id`) REFERENCES `classes` (`class_id`);
+
+ALTER TABLE `course_prerequisites` ADD FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`);
+
+ALTER TABLE `course_prerequisites` ADD FOREIGN KEY (`prereq_course_id`) REFERENCES `course` (`course_id`);
