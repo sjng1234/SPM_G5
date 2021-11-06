@@ -31,7 +31,7 @@ class Course(db.Model):
     course_description = Column(db.String(255))
     course_creator_id = Column(db.String(255), ForeignKey('admin.admin_id'))
     date_created =  Column(db.DateTime)
-    classes = db.relationship('Classes', backref="course", lazy="dynamic") # Establish one-to-many relationship between course and classes
+    classes = db.relationship('Classes', backref="course", lazy="dynamic",cascade="all, delete", passive_deletes=True ) # Establish one-to-many relationship between course and classes
     
     __mapper_args__ = {
         'polymorphic_identity': 'course'
@@ -81,7 +81,7 @@ class Chapter(db.Model):
     class_id = Column(db.Integer, primary_key=True)
     chapter_id = Column(db.Integer, primary_key=True)
     chapter_name = Column(db.String(255))
-    materials = db.relationship("Material", backref="chapter", lazy="dynamic")
+    materials = db.relationship("Material", backref="material", lazy="dynamic")
 
     __table_args__ = (
         ForeignKeyConstraint(

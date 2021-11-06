@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `material` (
   `course_id` varchar(50),
   `class_id` int,
   `chapter_id` int,
-  `mateial_name` varchar(255),
+  `material_name` varchar(255),
   `material_id` int AUTO_INCREMENT,
   `material_reference` varchar(255),
   PRIMARY KEY (`material_id`, `chapter_id`, `class_id`, `course_id`)

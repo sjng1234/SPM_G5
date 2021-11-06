@@ -161,10 +161,21 @@ def get_all_chapters(id):
     try:
         [courid, cid] = id.split("-")
         record = Classes.query.filter_by(course_id = courid, class_id = cid).first().chapters.all()
-        # record = Chapter.query.filter_by(course_id = courid, class_id = cid).all()
-        result = [i.to_dict() for i in record]
+        result = []
+        for chapter in record:
+            chapter_details = chapter.to_dict()
+            materials = chapter.materials.all()
+            chapter_details['materials'] = []
+            for material in materials:
+                material_details = material.to_dict()
+                del material_details['chapter_id']
+                del material_details['class_id']
+                del material_details['course_id']
+                chapter_details['materials'].append(material_details)
+            result.append(chapter_details)
         return jsonify(result)
-    except:
+    except Exception as e:
+        print(str(e))
         return jsonify({
             "Error Message": "Chapter is not found"
         }), 400
