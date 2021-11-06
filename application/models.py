@@ -104,6 +104,7 @@ class Material(db.Model):
     class_id = Column(db.Integer, primary_key=True)
     chapter_id = Column(db.Integer, primary_key=True)
     material_id = Column(db.Integer, primary_key=True)
+    material_name = Column(db.String(255))
     material_reference = Column(db.String(255))
 
 
@@ -351,6 +352,7 @@ class Material_Completion_Status(db.Model):
     class_id = Column(db.Integer, primary_key=True)
     chapter_id = Column(db.Integer, primary_key=True)
     material_id = Column(db.Integer, primary_key=True)
+    material_name = Column(db.String(255))
     is_completed = Column(db.Boolean)
     
     __mapper_args__ = {
@@ -359,8 +361,8 @@ class Material_Completion_Status(db.Model):
     
     __table_args__ = (
         ForeignKeyConstraint(
-            ["course_id", "class_id", "chapter_id", "material_id"],
-            ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id"]
+            ["course_id", "class_id", "chapter_id", "material_id", "material_name"],
+            ["material.course_id", "material.class_id", "material.chapter_id", "material.material_id","material.material_name"]
         ), {}
     ) 
     

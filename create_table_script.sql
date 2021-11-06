@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `material` (
   `course_id` varchar(50),
   `class_id` int,
   `chapter_id` int,
+  `mateial_name` varchar(255),
   `material_id` int AUTO_INCREMENT,
   `material_reference` varchar(255),
   PRIMARY KEY (`material_id`, `chapter_id`, `class_id`, `course_id`)
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `material_completion_status` (
   `class_id` int,
   `chapter_id` int,
   `material_id` int,
+  `material_name` varchar(255),
   `is_completed` boolean,
   PRIMARY KEY (`learner_id`, `material_id`, `chapter_id`, `class_id`, `course_id`)
 );
