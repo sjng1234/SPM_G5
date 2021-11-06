@@ -375,12 +375,12 @@ class Material_Completion_Status(db.Model):
 
 # course_prequisites - for trainers (tag to course)
 class Course_Prequisites(db.Model):
-    __tablename__ = "course_prequisites"
+    __tablename__ = "course_prerequisites"
     course_id = Column(db.String(255), db.ForeignKey("course.course_id"),primary_key=True)
     prereq_course_id = Column(db.String(255), db.ForeignKey("course.course_id"),primary_key=True)
     
     __mapper_args__ = {
-        'polymorphic_identity': 'course_prequisites'
+        'polymorphic_identity': 'course_prerequisites'
     }
     
     def to_dict(self):
