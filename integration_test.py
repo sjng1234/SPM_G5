@@ -694,6 +694,7 @@ class TestCreateMaterial(TestIntegration):
             "class_id": 1,
             "chapter_id": 1,
             "material_id": 1,
+            "material_name": "Material 1",
             "material_reference": "https://www.example.com"
         }
         response = self.client.put('/material/add', data=json.dumps(request_body), content_type='application/json')
@@ -709,7 +710,7 @@ class TestRetrieveChapterMaterials(TestIntegration):
         # Test Retrieve All Class Materials from chapter (TEST12311-1-1)
         response = self.client.get('/chapter/TEST12311-1-1/getMaterials')
         self.assert200(response)
-        self.assertEqual(response.json,[{'chapter_id': 1, 'class_id': 1, 'course_id': 'TEST12311', 'material_id': 1, 'material_reference': 'https://www.example.com'}])
+        self.assertEqual(response.json,[{'chapter_id': 1, 'class_id': 1, 'course_id': 'TEST12311', 'material_id': 1, 'material_name': 'Material 1', 'material_reference': 'https://www.example.com'}])
 
 # Test Case ID: TI29 (Authored by: Justin)
 class TestLearnerCompleteMaterial(TestIntegration):
@@ -724,6 +725,7 @@ class TestLearnerCompleteMaterial(TestIntegration):
             "class_id": 1,
             "chapter_id": 1,
             "material_id": 1,
+            "material_name": "Material 1",
             "is_completed": True
         }
         response = self.client.put('/learner/completeMaterial', data=json.dumps(request_body), content_type='application/json')
@@ -739,7 +741,7 @@ class TestRetrieveLearnerCompletedMaterialsOfSpecificClass(TestIntegration):
         # Test Retrieve All Learner Completed Materials
         response = self.client.get('/learner/getCompletedMaterials/TEST12311-1-3')
         self.assert200(response)
-        self.assertEqual(response.json,[{'chapter_id': 1, 'class_id': 1, 'course_id': 'TEST12311', 'is_completed': True, 'learner_id': 3, 'material_id': 1}])
+        self.assertEqual(response.json,[{'chapter_id': 1, 'class_id': 1, 'course_id': 'TEST12311', 'is_completed': True, 'learner_id': 3, 'material_id': 1, 'material_name': 'Material 1'}])
 
 # Test Case ID: TI31 (Authored by: Ambrose)
 class TestAddCoursePreReq(TestIntegration):

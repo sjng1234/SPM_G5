@@ -69,14 +69,15 @@ class TestChapterList(unittest.TestCase):
 # Test Case ID : TU04 (Authored by: Shen Jie)
 class TestMaterialList(unittest.TestCase):
     def test_to_dict(self):
-        material1 = Material(course_id="IS111", class_id=1, chapter_id=1, material_id=1)
-        material2 = Material(course_id="IS111", class_id=1, chapter_id=2, material_id=1, material_reference="This is the first material for the 2nd chapter")
+        material1 = Material(course_id="IS111", class_id=1, chapter_id=1, material_name="Material 1", material_id=1)
+        material2 = Material(course_id="IS111", class_id=1, chapter_id=2, material_id=1,material_name="Material 2", material_reference="This is the first material for the 2nd chapter")
 
         self.assertEqual(material1.to_dict(), {
             "course_id": "IS111",
             "class_id": 1,
             "chapter_id": 1,
             "material_id": 1,
+            "material_name":"Material 1",
             "material_reference": None
         })
 
@@ -85,6 +86,7 @@ class TestMaterialList(unittest.TestCase):
             "class_id": 1,
             "chapter_id": 2,
             "material_id": 1,
+            "material_name":"Material 2",
             "material_reference": "This is the first material for the 2nd chapter"
         })
 
@@ -318,7 +320,7 @@ class TestQuiz_Results(unittest.TestCase):
 # Test Case ID : TU20 (Authored by: Justin)
 class TestMaterial_Completion_StatusTest(unittest.TestCase):
     def test_to_dict(self):
-        material_completion_status1 = Material_Completion_Status(learner_id = 1, course_id = "IS111", class_id = 1, chapter_id = 1, material_id = 1, is_completed = True)
+        material_completion_status1 = Material_Completion_Status(learner_id = 1, course_id = "IS111", class_id = 1, chapter_id = 1, material_id = 1, material_name="Material 1", is_completed = True)
 
         self.assertEqual(material_completion_status1.to_dict(),{
             "learner_id":1,
@@ -326,6 +328,7 @@ class TestMaterial_Completion_StatusTest(unittest.TestCase):
             "class_id":1,
             "chapter_id":1,
             "material_id":1,
+            "material_name": "Material 1",
             "is_completed":True
         })
 
