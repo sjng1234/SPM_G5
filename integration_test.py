@@ -53,7 +53,7 @@ class TestCreateUsers(TestIntegration):
             "user_type": "learner",
             "name": "Learner",
             "department": "Engineering",
-            "position": "Senior Engineer"
+            "position": "Junior Engineer"
         }
         response = self.client.post('/admin/create', data=json.dumps(request_body), content_type='application/json')
         self.assert200(response)
@@ -62,7 +62,7 @@ class TestCreateUsers(TestIntegration):
         response = self.client.get('/admin/getAll')
         # print(response.json)
         self.assert200(response)
-        self.assertEqual(response.json,[{'admin_id': 1, 'department': 'HR', 'name': 'Admin', 'position': 'HR Senior', 'user_id': 1, 'user_type': 'admin'}, {'department': 'Engineering', 'name': 'Trainer', 'position': 'Senior Engineer', 'trainer_id': 2, 'user_id': 2, 'user_type': 'trainer'}, {'department': 'Engineering', 'learner_id': 3, 'name': 'Learner', 'position': 'Senior Engineer', 'user_id': 3, 'user_type': 'learner'}])
+        self.assertEqual(response.json,[{'admin_id': 1, 'department': 'HR', 'name': 'Admin', 'position': 'HR Senior', 'user_id': 1, 'user_type': 'admin'}, {'department': 'Engineering', 'name': 'Trainer', 'position': 'Senior Engineer', 'trainer_id': 2, 'user_id': 2, 'user_type': 'trainer'}, {'department': 'Engineering', 'learner_id': 3, 'name': 'Learner', 'position': 'Junior Engineer', 'user_id': 3, 'user_type': 'learner'}])
 
 # Test Case ID: TI02 (Authored by: Adrian)
 class TestCreateCourse(TestIntegration):
@@ -804,6 +804,65 @@ class TestRetrieveLearnerBadges(TestIntegration):
         response = self.client.get('/learner/3/getAllBadges')
         self.assert200(response)
         self.assertEqual(response.json,{'badges': ['TEST12311'], 'learner_id': '3', 'num_badges': 1})
+        
+# Test Case ID: TI35 (Authored by: Shen Jie)
+class TestRetrieveAllLearnerDetails(TestIntegration):
+    def test_retrieve_all_learner_details(self):
+        # Run Test Class for TestCreateUsers
+        TestCreateUsers.test_create_users(self)
+        
+        # Test Retrieve All Learner Details
+        response = self.client.get('/admin/getAllLearners')
+        self.assert200(response)
+        self.assertEqual(response.json,[{'department': 'Engineering', 'learner_id': 3, 'name': 'Learner', 'position': 'Junior Engineer', 'user_id': 3, 'user_type': 'learner'}])
+        
+# Test Case ID: TI36 (Authored by: Shen Jie)
+class TestRetrieveAllTrainerDetails(TestIntegration):
+    def test_retrieve_all_trainer_details(self):
+        # Run Test Class for TestCreateUsers
+        TestCreateUsers.test_create_users(self)
+        
+        # Test Retrieve All Trainer Details
+        response = self.client.get('/admin/getAllTrainers')
+        self.assert200(response)
+        self.assertEqual(response.json,[{'department': 'Engineering', 'trainer_id': 2, 'name': 'Trainer', 'position': 'Senior Engineer', 'user_id': 2, 'user_type': 'trainer'}])
+        
+# Test Case ID: TI37 (Authored by: Shen Jie)
+class TestRetrieveIndividualDetails(TestIntegration):
+    def test_retrieve_individual_details(self):
+        # Run Test Class for TestCreateUsers
+        TestCreateUsers.test_create_users(self)
+        
+        # Test Retrieve Individual Details for admin(id1)
+        response = self.client.get('/admin/1')
+        self.assert200(response)
+        self.assertEqual(response.json,{'admin_id': 1, 'department': 'HR', 'name': 'Admin', 'position': 'HR Senior', 'user_id': 1, 'user_type': 'admin'})
+        
+        # Test Retrieve Individual Details for trainer(id2)
+        response = self.client.get('/trainer/2')
+        self.assert200(response)
+        self.assertEqual(response.json,{'department': 'Engineering', 'name': 'Trainer', 'position': 'Senior Engineer', 'trainer_id': 2, 'user_id': 2, 'user_type': 'trainer'})
+        
+        # Test Retrieve Individual Details for learners(id3)
+        response = self.client.get('/learner/3')
+        self.assert200(response)
+        self.assertEqual(response.json,{'department': 'Engineering', 'learner_id': 3, 'name': 'Learner', 'position': 'Junior Engineer', 'user_id': 3, 'user_type': 'learner'})
+        
+        # Getting Invalid User Details for admin/trainer/learner should all be 400
+        response = self.client.get('/admin/4')
+        self.assert400(response)
+        response = self.client.get('/trainer/4')
+        self.assert400(response)
+        response = self.client.get('/learner/4')
+        self.assert400(response)
+        
+        # Trying to query user details for wrong user type should also be be 400
+        response = self.client.get('/admin/2')
+        self.assert400(response)
+        response = self.client.get('/learner/1')
+        self.assert400(response)
+        response = self.client.get('/trainer/1')
+        self.assert400(response)
         
 # Run only if we run python directly from this file, not wh›en importing
 if __name__ == "__main__":
