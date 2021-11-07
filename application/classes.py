@@ -1,7 +1,7 @@
 from re import L
 from flask import Blueprint, request, jsonify
 
-from .models import Classes, Course, Trainer, User, Quiz, Quiz_Questions, Quiz_Questions_Options, Chapter
+from .models import Classes, Course, Trainer, User, Quiz, Quiz_Questions, Quiz_Questions_Options, Chapter, Learner_Enrolment
 from .extensions import db
 
 classes = Blueprint('class', __name__, url_prefix="/classes")
@@ -178,4 +178,27 @@ def get_all_chapters(id):
         print(str(e))
         return jsonify({
             "Error Message": "Chapter is not found"
+        }), 400
+        
+# Get All enrolled learners for this class
+@classes.route("/<id>/getAllEnrolledLearners")
+def get_all_enrolled_users(id):
+    try:
+        [courid, classid] = id.split("-")
+        record = Learner_Enrolment.query.filter_by(course_id = courid, class_id = classid).all()
+        result = {}
+        result['enrol_count'] = 0
+        result['enrolled_users'] = []
+        result['course_id'] = courid
+        result['class_id'] = classid
+        for user in record:
+            user_id = user.learner_id
+            user_details = User.query.get(user_id).to_dict()
+            result['enrol_count'] += 1
+            result['enrolled_users'].append(user_details)
+        return jsonify(result)
+    except Exception as e:
+        print(str(e))
+        return jsonify({
+            "Error Message": "Please enter a valid course-class_id"
         }), 400
