@@ -43,6 +43,20 @@ def get_all():
     result = [i.to_dict() for i in record]
     return jsonify(result)
 
+# Get All Learners
+@admin.route("/getAllLearners", methods = ["GET"])
+def get_all_learners():
+    record = User.query.filter_by(user_type = "learner").all()
+    result = [i.to_dict() for i in record]
+    return jsonify(result)
+
+# Get All Trainers
+@admin.route("/getAllTrainers", methods = ["GET"])
+def get_all_trainers():
+    record = User.query.filter_by(user_type = "trainer").all()
+    result = [i.to_dict() for i in record]
+    return jsonify(result)
+
 # Get All instructors qualification
 @admin.route("/getAllInstructorsQualification", methods = ["GET"])
 def get_all_instructors_qualification():
