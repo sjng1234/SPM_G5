@@ -864,6 +864,19 @@ class TestRetrieveIndividualDetails(TestIntegration):
         response = self.client.get('/trainer/1')
         self.assert400(response)
         
+# Test Case ID: TI38 (Authored by: Shen Jie)
+class TestGetSpecificClassAllEnrolledLearners(TestIntegration):
+    def test_get_specific_class_all_enrolled_users(self):
+        # Run Test Class for LearnerEnrollInClass
+        LearnerEnrolInClass.test_learner_enrol_in_class(self)
+        
+        # Test Get Specific Class All Enrolled Users (class_id = TEST12311-1, learner_enrolled is learner_id1)
+        response = self.client.get('/classes/TEST12311-1/getAllEnrolledLearners')
+        self.assert200(response)
+        self.assertEqual(response.json,{'class_id': '1', 'course_id': 'TEST12311', 'enrol_count': 1, 'enrolled_users': [{'department': 'Engineering', 'learner_id': 3, 'name': 'Learner', 'position': 'Junior Engineer', 'user_id': 3, 'user_type': 'learner'}]})
+        # print(response.json)
+        
+        
 # Run only if we run python directly from this file, not wh›en importing
 if __name__ == "__main__":
     unittest.main()
