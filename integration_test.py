@@ -681,7 +681,7 @@ class TestRetrieveClassChapters(TestIntegration):
         # Test Retrieve All Class Chapters from class (TEST12311-1)
         response = self.client.get('/classes/getChapters/TEST12311-1')
         self.assert200(response)
-        self.assertEqual(response.json,[{'chapter_id': 1, 'chapter_name': 'Chapter 1', 'class_id': 1, 'course_id': 'TEST12311'}])
+        self.assertEqual(response.json,[{'chapter_id': 1, 'chapter_name': 'Chapter 1', 'class_id': 1, 'course_id': 'TEST12311','materials': []}])
         
 # Test Case ID: TI27 (Authored by: Justin)
 class TestCreateMaterial(TestIntegration):
