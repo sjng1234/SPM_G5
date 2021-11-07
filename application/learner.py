@@ -10,6 +10,19 @@ learner = Blueprint('learner', __name__,url_prefix='/learner')
 def test_root_user_route():
     return "learner root route"
 
+# Get Learner's Details
+@learner.route('/<learner_id>', methods=['GET'])
+def get_learner_details(learner_id):
+    try:
+        user = User.query.get(learner_id)
+        if user.user_type != "learner":
+            raise Exception("User is not a learner")
+        else:
+            return jsonify(user.to_dict())
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message": 'Learner Not Found'}), 400
+
 # Get learner's all enrolled class
 @learner.route('/getEnrolledClasses/<learner_id>', methods=['GET'])
 def get_learner_enrolled_classes(learner_id):
