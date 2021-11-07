@@ -10,6 +10,19 @@ admin = Blueprint("user", __name__, url_prefix="/admin")
 def test_root_user_route():
     return "admin root route"
 
+# Get Admin's Details
+@admin.route('/<admin_id>', methods=['GET'])
+def get_learner_details(admin_id):
+    try:
+        user = User.query.get(admin_id)
+        if user.user_type != "admin":
+            raise Exception("User is not an admin")
+        else:
+            return jsonify(user.to_dict())
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message": 'Admin Not Found'}), 400
+
 # Create User
 @admin.route("/create", methods=["POST"])
 def create_user():

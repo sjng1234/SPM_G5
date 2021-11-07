@@ -9,6 +9,19 @@ trainer = Blueprint("trainer", __name__, url_prefix="/trainer")
 def test_trainer():
     return jsonify("Root Trainer Route")
 
+# Get Trainer's Details
+@trainer.route('/<trainer_id>', methods=['GET'])
+def get_learner_details(trainer_id):
+    try:
+        user = User.query.get(trainer_id)
+        if user.user_type != "trainer":
+            raise Exception("User is not an trainer")
+        else:
+            return jsonify(user.to_dict())
+    except Exception as e:
+        print(str(e))
+        return jsonify({"Error Message": 'Trainer Not Found'}), 400
+
 # Trainer Get All His Qualifications
 @trainer.route("/getAllQualifications/<id>", methods=["GET"])
 def get_qualifications(id):
