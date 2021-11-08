@@ -652,7 +652,7 @@ class TestGetTrainerListOfClass(TestIntegration):
         response = self.client.get('/trainer/getAllClasses/2')
         print(response.json)
         self.assert200(response)
-        self.assertEqual(response.json,[{'class_creator_id': 1, 'class_id': 1, 'class_size': 40, 'course_id': 'TEST12311', 'end_datetime': None, 'start_datetime': None, 'trainer_id': 2}])
+        self.assertEqual(response.json,[{'class_creator_id': 1, 'class_id': 1, 'class_size': 40, 'course_id': 'TEST12311', 'end_datetime': None, 'start_datetime': None, 'quiz_created': False,'trainer_id': 2}])
 
 # Test Case ID: TI25 (Authored by: Justin)
 class TestCreateChapter(TestIntegration):
