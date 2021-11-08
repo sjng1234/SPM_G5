@@ -38,7 +38,7 @@ def get_qualifications(id):
 def get_all_classes(id):
     try:
         classes = Classes.query.filter_by(trainer_id=id).all()
-        allClasses = []
+        result = []
         for i in classes:
             c = i.to_dict()
             quiz = i.quiz.all()
@@ -46,10 +46,10 @@ def get_all_classes(id):
                 c["quiz_created"] = True
             else:
                 c["quiz_created"] = False
-            allClasses.append(c)
-        return jsonify(allClasses)
+            result.append(c)
+        return jsonify(result)
     except Exception as e:
-        # print(str(e))
+        # print(str(e)) 
         return jsonify({"Error Message":"Please Enter a Valid Trainer ID"}), 400
     
 # Trainer Update Qualifications
