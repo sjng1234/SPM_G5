@@ -11,7 +11,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # SQLALCHEMY_DATABASE_URI = "mysql://root:root@localhost:3306/SPM"
 
 # # for windows
-# SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3306/SPM"
+SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3306/SPM"
 
 # To Test on Cloud SQL
 CLOUD_DB_USERNAME = os.environ.get('CLOUD_DB_USERNAME')
