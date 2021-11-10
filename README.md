@@ -1,4 +1,4 @@
-# SPM G5T6 LMS Backend
+# SPM G6T5 LMS Backend
 
 ## Members:
 ```
