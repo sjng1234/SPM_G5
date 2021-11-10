@@ -1,4 +1,11 @@
-# SPM LMS Backend
+# SPM G5T6 LMS Backend
+
+## Members:
+Adrian
+Ambrose
+Hein
+Justin 
+Shen Jie
   
 ## Project Setup
  
